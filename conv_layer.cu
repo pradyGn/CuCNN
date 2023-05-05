@@ -16,7 +16,7 @@ __global__ void convolutional_layer2D(float *filter, float *input, float *output
     int j = blockIdx.x;
 
     for (int m = 0; m < filter_M; m++){
-        for (int n = 0; n < filter_N, n++){
+        for (int n = 0; n < filter_N; n++){
             int output_pos = (i + (filter_N - 1) - n) + (j + (filter_M - 1) - m) * output_N;
             int input_pos = i + (j*input_N);
             int filter_pos = m + (n*filter_N);
@@ -44,8 +44,8 @@ int main(){
     h_filter = (float*)malloc(sizeof(float) * (filter_M * filter_M));
     h_input = (float*)malloc(sizeof(float) * (input_M * input_M));
 
-    initialize(h_filter, filter_M, filter_M)
-    initialize(h_input, input_M, input_M)
+    initialize(h_filter, filter_M, filter_M);
+    initialize(h_input, input_M, input_M);
 
     for (int i=0; i<filter_M; i++){
         for (int j=0; j<filter_M; j++)

@@ -10,7 +10,7 @@
 #define output_M 4
 #define output_N 4
 
-__global__ void convolutional_layer2D(float *filter, float *input, float *output, int filter_M, int filter_N, int input_M, int input_N, int output_M, int output_N)
+__global__ void convolutional_layer2D (float *filter, float *input, float *output)
 {
     int i = threadIdx.x;
     int j = blockIdx.x;

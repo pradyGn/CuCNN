@@ -44,6 +44,27 @@ int main(){
     initialize(h_filter, filter_M, filter_M)
     initialize(h_input, input_M, input_M)
 
+    for (int i=0; i<filter_M; i++){
+        for (int j=0; j<filter_M; j++)
+        {
+                printf("%.2f", h_filter[(i*filter_M)+j]);
+                printf(" ");
+        }
+        printf("\n");
+    }
+
+    printf("\n");
+
+    for (int i=0; i<input_M; i++){
+        for (int j=0; j<input_M; j++)
+        {
+                printf("%.2f", h_input[(i*input_M)+j]);
+                printf(" ");
+        }
+        printf("\n");
+    }
+
+    
     cudaMalloc((void**)&d_output, sizeof(float) * (output_M * output_M));
     cudaMalloc((void**)&d_filter, sizeof(float) * (filter_M * filter_M));
     cudaMalloc((void**)&d_input, sizeof(float) * (input_M * input_M));
@@ -51,7 +72,7 @@ int main(){
     cudaMemcpy(d_filter, h_filter, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
     cudaMemcpy(d_input, h_input, sizeof(float) * (input_M * input_M), cudaMemcpyHostToDevice);
 
-
+    /*
     dim3 gridsize(input_M);
     dim3 blocksize(input_M);
 
@@ -62,11 +83,12 @@ int main(){
     for (int i=0; i<output_M; i++){
         for (int j=0; j<output_M; j++)
         {
-                printf("%.2f", h_output[(i*matrix_N)+j]);
+                printf("%.2f", h_output[(i*output_M)+j]);
                 printf(" ");
         }
         printf("\n");
     }
+    */
 
     cudaFree(d_output);
     cudaFree(d_filter);

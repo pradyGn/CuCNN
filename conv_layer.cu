@@ -35,10 +35,6 @@ void initialize(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    //int input_M = 3;
-    //int filter_M = 2;
-    //int output_M = input_M + 1;
-
     float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input;
 
     h_output = (float*)malloc(sizeof(float) * (output_M * output_M));
@@ -71,6 +67,14 @@ int main(){
         }
         printf("\n");
     }
+
+    cudaFree(d_output);
+    cudaFree(d_filter);
+    cudaFree(d_input);
+
+    free(h_output);
+    free(h_filter);
+    free(h_input);
 
     
 

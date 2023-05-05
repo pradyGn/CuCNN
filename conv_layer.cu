@@ -67,7 +67,8 @@ int main(){
         printf("\n");
     }
 
-    
+    printf("\n");
+
     cudaMalloc((void**)&d_output, sizeof(float) * (output_M * output_M));
     cudaMalloc((void**)&d_filter, sizeof(float) * (filter_M * filter_M));
     cudaMalloc((void**)&d_input, sizeof(float) * (input_M * input_M));
@@ -75,7 +76,7 @@ int main(){
     cudaMemcpy(d_filter, h_filter, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
     cudaMemcpy(d_input, h_input, sizeof(float) * (input_M * input_M), cudaMemcpyHostToDevice);
 
-    /*
+    
     dim3 gridsize(input_M);
     dim3 blocksize(input_M);
 
@@ -91,7 +92,7 @@ int main(){
         }
         printf("\n");
     }
-    */
+    
 
     cudaFree(d_output);
     cudaFree(d_filter);

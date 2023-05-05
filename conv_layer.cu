@@ -80,7 +80,7 @@ int main(){
     dim3 gridsize(input_M);
     dim3 blocksize(input_M);
 
-    convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_input, d_output, filter_M, filter_M, input_M, input_M, output_M, output_M);
+    convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_input, d_output);
 
     cudaMemcpy(h_output, d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
 

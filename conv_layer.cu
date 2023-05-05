@@ -4,10 +4,13 @@
 #include <cuda_runtime.h>
 
 #define input_M 3
+#define input_N 3
 #define filter_M 2
+#define filter_N 2
 #define output_M 4
+#define output_N 4
 
-__global__ void convolutional_layer2D(float *filter, int filter_M, int filter_N, float *input, int input_M, int input_N, float *output, int output_M, int output_N)
+__global__ void convolutional_layer2D(float *filter, float *input, float *output, int filter_M, int filter_N, int input_M, int input_N, int output_M, int output_N)
 {
     int i = threadIdx.x;
     int j = blockIdx.x;
@@ -76,7 +79,7 @@ int main(){
     dim3 gridsize(input_M);
     dim3 blocksize(input_M);
 
-    convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, filter_M, filter_M, d_input, input_M, input_M, d_output, output_M, output_M);
+    convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_input, d_output, filter_M, filter_M, input_M, input_M, output_M, output_M);
 
     cudaMemcpy(h_output, d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
 

@@ -54,6 +54,5 @@ __global__ void forward(float* O, float* X, float *W, float *b, int W_x, int W_y
         }
         O[row*O_x + col] = O_val + b[row];
     }
-    Op = O;
 }
 

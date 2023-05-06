@@ -17,11 +17,11 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
 
     //output[i + j*output_N] += 1;
 
-    output[1] = i;
+    output[i + j*filter_N] = filter[i + j*filter_N] * input[i + j*filter_N];
     
-    int input_pos = i + (j*input_N);
-    int output_pos = 0;
-    
+    //int input_pos = i + (j*input_N);
+    //int output_pos = 0;
+    /*
     for (int m = 0; m < filter_M; m++){
         for (int n = 0; n < filter_N; n++){
             output_pos = (i + (filter_N - 1) - n) + (j + (filter_M - 1) - m) * output_N;
@@ -31,6 +31,7 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
             output[0] += 1;
         }
     }
+    */
     
     
 

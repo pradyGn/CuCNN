@@ -19,7 +19,7 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
         for (int n = 0; n < filter_N; n++){
             int output_pos = (i + (filter_N - 1) - n) + (j + (filter_M - 1) - m) * output_N;
             int input_pos = i + (j*input_N);
-            int filter_pos = m + (n*filter_N);
+            int filter_pos = (m*filter_N) + n;
             output[output_pos] += input[input_pos] * filter[filter_pos];
         }
     }

@@ -18,14 +18,14 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
     //output[i + j*output_N] += 1;
     
     int input_pos = i + (j*input_N);
-    int output_pos = (filter_N - 1) + (filter_M - 1) * output_N;
+    int output_pos = 0;
     
     for (int m = 0; m < filter_M; m++){
         for (int n = 0; n < filter_N; n++){
             output_pos = (i + (filter_N - 1) - n) + (j + (filter_M - 1) - m) * output_N;
             //int filter_pos = (m*filter_N) + n;
             //output[output_pos] += input[input_pos] * filter[filter_pos];
-            output[0] += 1;
+            output[output_pos] += 1;
         }
     }
     
@@ -53,6 +53,12 @@ int main(){
 
     initialize(h_filter, filter_M, filter_M);
     initialize(h_input, input_M, input_M);
+    
+    for (int i = 0; i < output_N; i++){
+        for (int j = 0; j < output_N; j++){
+            h_output[(i*output_N) + j] = 0;
+        }
+    }
 
     for (int i=0; i<filter_M; i++){
         for (int j=0; j<filter_M; j++)
@@ -82,6 +88,7 @@ int main(){
 
     cudaMemcpy(d_filter, h_filter, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
     cudaMemcpy(d_input, h_input, sizeof(float) * (input_M * input_M), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_output, h_output, sizeof(float) * (output_M * output_M), cudaMemcpyHostToDevice);
 
     
     dim3 gridsize(input_M);

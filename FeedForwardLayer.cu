@@ -37,7 +37,6 @@ FeedForwardLayer::FeedForwardLayer(){
 	}
     cudaMemcpy(bias, h_biases, sizeof(float) * ht, cudaMemcpyHostToDevice);
 	cudaMemcpy(weights, h_weights, sizeof(float) * wdth * ht, cudaMemcpyHostToDevice);
-    
 }
 __global__ void forward(float* O, float* X, float *W, float *b, int W_x, int W_y, int X_x, int X_y){
     int col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -49,24 +48,11 @@ __global__ void forward(float* O, float* X, float *W, float *b, int W_x, int W_y
     //O[i + j*O_x] = W[i + j*O_x]*X[i + j*O_x] + b[i + j*O_x];
     float O_val = 0;
     if (row < O_y && col < O_x){
-        for (int i = 0; i < W_x, i++){
+        for (int i = 0; i < W_x; i++){
             O_val += W[row * W_x + i] * X[i * X_x + col];
         }
         O[row*O_x + col] = O_val + b[row];
     }
     Op = O;
 }
-    
-
-__global__  void backward(float* W, float* dO, float* dX, int W_x, int W_y, int dO_x, int dO_y){
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-    int row = blockIdx.y * blockDim.y + threadIdx.y;    
-}
-
-__global__ void update(){
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
-    int row = blockIdx.y * blockDim.y + threadIdx.y;   
-}
-
-
 };

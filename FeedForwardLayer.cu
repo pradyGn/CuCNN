@@ -38,6 +38,7 @@ FeedForwardLayer::FeedForwardLayer(){
     cudaMemcpy(bias, h_biases, sizeof(float) * ht, cudaMemcpyHostToDevice);
 	cudaMemcpy(weights, h_weights, sizeof(float) * wdth * ht, cudaMemcpyHostToDevice);
 }
+};
 __global__ void forward(float* O, float* X, float *W, float *b, int W_x, int W_y, int X_x, int X_y){
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
@@ -55,4 +56,4 @@ __global__ void forward(float* O, float* X, float *W, float *b, int W_x, int W_y
     }
     Op = O;
 }
-};
+

@@ -6,8 +6,14 @@
 #define N 4
 
 __global__ void forward_propagation_fc(float* input, float* weights, float* bias, float* output) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  output[i] = bias[i] + weights[i] * input[i];
+  //int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int i = threadIdx.x;
+  float sum = 0;
+  for(int j = 1; j < N; j++){
+    sum += bias[j] + weights[i*N + j] * input[j];
+  }
+  output[i] = sum;
+  //output[i] = bias[i] + weights[i] * input[i];
 }
 
 

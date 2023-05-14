@@ -24,7 +24,7 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
     for (int m = 0; m < filter_M; m++){
         for (int n = 0; n < filter_N; n++){
 
-            sum += filter[m * filter_N + n] * input[output_pos + n + m*(input_N)]
+            sum += filter[m * filter_N + n] * input[output_pos + n + m*(input_N)];
 
         }
     }

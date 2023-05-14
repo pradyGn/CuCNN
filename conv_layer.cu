@@ -3,12 +3,12 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-#define input_M 3
-#define input_N 3
-#define filter_M 2
-#define filter_N 2
-#define output_M 2
-#define output_N 2
+#define input_M 8
+#define input_N 8
+#define filter_M 3
+#define filter_N 3
+#define output_M 6
+#define output_N 6
 
 __global__ void convolutional_layer2D (float *filter, float *input, float *output)
 {

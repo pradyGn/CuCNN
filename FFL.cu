@@ -9,7 +9,7 @@ __global__ void forward_propagation_fc(float* input, float* weights, float* bias
   //int i = blockIdx.x * blockDim.x + threadIdx.x;
   int i = threadIdx.x;
   float sum = 0;
-  for(int j = 1; j < N; j++){
+  for(int j = 0; j < N; j++){
     sum += bias[j] + weights[i*N + j] * input[j];
   }
   output[i] = sum;

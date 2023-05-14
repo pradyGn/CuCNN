@@ -29,6 +29,8 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
         }
     }
     
+    int output_pos = i + (j*output_N);
+
     output[output_pos] = sum;
     
     

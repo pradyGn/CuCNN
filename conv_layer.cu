@@ -15,7 +15,7 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
     int i = threadIdx.x;
     int j = blockIdx.x;
 
-    int output_pos = i + (j*output_N);
+    int output_pos = i + (j*input_N);
 
     float sum = 0;
     //int output_pos = (i + (filter_N - 1) - n) + (j + (filter_M - 1) - m) * output_N;

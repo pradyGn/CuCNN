@@ -7,26 +7,29 @@
 #define input_N 3
 #define filter_M 2
 #define filter_N 2
-#define output_M 4
-#define output_N 4
+#define output_M 2
+#define output_N 2
 
 __global__ void convolutional_layer2D (float *filter, float *input, float *output)
 {
     int i = threadIdx.x;
     int j = blockIdx.x;
 
-    int input_pos = i + (j*input_N);
-    //int output_pos = (i + (filter_N - 1)) + ((j + (filter_M - 1)) * output_N);
+    int output_pos = i + (j*output_N);
+
+    float sum = 0;
+    //int output_pos = (i + (filter_N - 1) - n) + (j + (filter_M - 1) - m) * output_N;
+    //int filter_pos = (m*filter_N) + n;
     
     for (int m = 0; m < filter_M; m++){
         for (int n = 0; n < filter_N; n++){
-            //int output_pos = (i + (filter_N - 1) - n) + (j + (filter_M - 1) - m) * output_N;
-            int output_pos = (i + (filter_N - 1) - n) + ((j + (filter_M - 1) - m) * output_N);
-            int filter_pos = (m*filter_N) + n;
-            output[output_pos] += filter[filter_pos] * input[input_pos];
+
+            sum += filter[m * filter_N + n] * input[output_pos + n + m*(input_N)]
+
         }
     }
     
+    output[output_pos] = sum;
     
     
 
@@ -90,8 +93,8 @@ int main(){
     cudaMemcpy(d_output, h_output, sizeof(float) * (output_M * output_M), cudaMemcpyHostToDevice);
 
     
-    dim3 gridsize(input_M);
-    dim3 blocksize(input_M);
+    dim3 gridsize(output_M);
+    dim3 blocksize(output_M);
 
     convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_input, d_output);
 

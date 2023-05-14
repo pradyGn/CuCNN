@@ -3,6 +3,8 @@
 #include <cuda.h>
 
 
+#define N 4
+
 __global__ void forward_propagation_fc(float* input, float* weights, float* bias, float* output) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   output[i] = bias[i] + weights[i] * input[i];

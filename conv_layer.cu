@@ -50,7 +50,7 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
     for (int i=0; i<matrix_M; i++){
         for (int j=0; j<matrix_N; j++)
         {
-                printf("%.2f", h_filter[(i*matrix_M)+j]);
+                printf("%.2f", matrix[(i*matrix_M)+j]);
                 printf(" ");
         }
         printf("\n");

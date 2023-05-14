@@ -46,6 +46,18 @@ void initialize(float *matrix, int matrix_M, int matrix_N){
     }
 }
 
+void check_matrix(float *matrix, int *matrix_M, int *matrix_N){
+    for (int i=0; i<matrix_M; i++){
+        for (int j=0; j<matrix_N; j++)
+        {
+                printf("%.2f", h_filter[(i*matrix_M)+j]);
+                printf(" ");
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
 
 int main(){
 
@@ -64,7 +76,10 @@ int main(){
         }
     }
 
-    for (int i=0; i<filter_M; i++){
+    check_matrix(h_filter, filter_M, filter_M);
+    check_matrix(h_input, input_M, input_M);
+
+ /*   for (int i=0; i<filter_M; i++){
         for (int j=0; j<filter_M; j++)
         {
                 printf("%.2f", h_filter[(i*filter_M)+j]);
@@ -85,6 +100,8 @@ int main(){
     }
 
     printf("\n");
+*/
+
 
     cudaMalloc((void**)&d_output, sizeof(float) * (output_M * output_M));
     cudaMalloc((void**)&d_filter, sizeof(float) * (filter_M * filter_M));

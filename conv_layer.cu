@@ -46,7 +46,7 @@ void initialize(float *matrix, int matrix_M, int matrix_N){
     }
 }
 
-void check_matrix(float *matrix, int *matrix_M, int *matrix_N){
+void check_matrix(float *matrix, int matrix_M, int matrix_N){
     for (int i=0; i<matrix_M; i++){
         for (int j=0; j<matrix_N; j++)
         {

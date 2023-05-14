@@ -79,29 +79,6 @@ int main(){
     check_matrix(h_filter, filter_M, filter_M);
     check_matrix(h_input, input_M, input_M);
 
- /*   for (int i=0; i<filter_M; i++){
-        for (int j=0; j<filter_M; j++)
-        {
-                printf("%.2f", h_filter[(i*filter_M)+j]);
-                printf(" ");
-        }
-        printf("\n");
-    }
-
-    printf("\n");
-
-    for (int i=0; i<input_M; i++){
-        for (int j=0; j<input_M; j++)
-        {
-                printf("%.2f", h_input[(i*input_M)+j]);
-                printf(" ");
-        }
-        printf("\n");
-    }
-
-    printf("\n");
-*/
-
 
     cudaMalloc((void**)&d_output, sizeof(float) * (output_M * output_M));
     cudaMalloc((void**)&d_filter, sizeof(float) * (filter_M * filter_M));

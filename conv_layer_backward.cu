@@ -13,10 +13,10 @@ void add_padding(float *input, float *padded_input, int padding_dim, int input_N
         }
     }
 
-    for (int i = padding_dim; i<(input_N + padding_dim); i++){
+    for (int i = padding_dim-1; i<(input_N + padding_dim-1); i++){
         cout << i << endl;
-        for (int j = padding_dim; j<(input_N + padding_dim); j++){
-            padded_input[i*padded_input_N + j] = input[(i-padding_dim)*input_N + (j-padding_dim)];
+        for (int j = padding_dim-1; j<(input_N + padding_dim-1); j++){
+            padded_input[i*padded_input_N + j] = input[(i-(padding_dim-1))*input_N + (j-(padding_dim-1))];
         }
     }
 

@@ -63,3 +63,32 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
   fclose(test_images_file);
   fclose(test_labels_file);
 }
+
+int main() {
+
+  // Initialize the arrays.
+  float* train_images = (float*)malloc(sizeof(float) * 60000 * 784);
+  float* train_labels = (float*)malloc(sizeof(float) * 60000);
+  float* test_images = (float*)malloc(sizeof(float) * 10000 * 784);
+  float* test_labels = (float*)malloc(sizeof(float) * 10000);
+
+  // Read the MNIST dataset.
+  read_mnist_dataset(train_images, train_labels, test_images, test_labels);
+
+  // Print out the first image.
+  for (int i = 0; i < 784; i++) {
+    printf("%f ", train_images[i]);
+  }
+  printf("\n");
+
+  // Print out the first label.
+  printf("%f\n", train_labels[0]);
+
+  // Free the memory.
+  free(train_images);
+  free(train_labels);
+  free(test_images);
+  free(test_labels);
+
+  return 0;
+}

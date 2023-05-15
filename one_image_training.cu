@@ -43,15 +43,15 @@ int main(){
     //check_matrix(h_filter, filter_M, filter_M);
 
     // Initialize and allocate weights and bias for Dense layer
-    h_weights = (float*)malloc(sizeof(float) * (dense_output_M * output_M));
+    h_weights = (float*)malloc(sizeof(float) * (dense_output_M * (output_M * output_M)));
     h_bias_dense = (float*)malloc(sizeof(float) * (dense_output_M));
     initialize_dense_weights_and_bias(h_weights, h_bias_dense);
-    cudaMalloc((void**)&d_weights, sizeof(float) * (dense_output_M * output_M));
+    cudaMalloc((void**)&d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)));
     cudaMalloc((void**)&d_bias_dense, sizeof(float) * dense_output_M);
-    cudaMemcpy(d_weights, h_weights, sizeof(float) * (dense_output_M * output_M), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_weights, h_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
     cudaMemcpy(d_bias_dense, h_bias_dense, sizeof(float) * dense_output_M, cudaMemcpyHostToDevice);
     check_matrix(h_bias_dense, 1, dense_output_M);
-    check_matrix(h_weights, dense_output_M, output_M);
+    check_matrix(h_weights, dense_output_M, (output_M * output_M));
 
     for (int i = 0; i < 2; i++){
 

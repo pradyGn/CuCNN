@@ -19,10 +19,10 @@ __global__ void backward_propagation_fc(float* sigmoid_output,float* delta_next,
 {
  int i = blockIdx.x * blockDim.x  + threadIdx.x;
  int j = blockIdx.x;
- delta_curr[(i % blockDim.x) + j*blockDim.x] += sigmoid_output[j]*delta_next[i % blockDim.x]; 
- delta_curr[(i % blockDim.x) + j*blockDim.x] /= bs;
+ delta_curr[i] += sigmoid_output[j]*delta_next[i % blockDim.x]; 
+ delta_curr[i] /= bs;
  //delta_curr[(i % blockDim.x) + j*blockDim.x] += lambda*weights[(i % blockDim.x) + j*blockDim.x];
-  delta_curr[(i % blockDim.x) + j*blockDim.x] += lambda*weights[i*N + j];
+ delta_curr[i] += lambda*weights[i*N + j];
 }
 
 

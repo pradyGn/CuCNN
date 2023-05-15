@@ -4,11 +4,6 @@
 #include <cuda_runtime.h>
 
 void add_padding(float *input, float *padded_input, int padding_dim, int input_N, int padded_input_N){
-    //float *padded_input;
-    //padded_input = (float*)malloc(sizeof(float) * (padded_input_N * padded_input_N));
-
-    //int padded_input_N = padding_dim + input_N;
-    //int start = padding_dim*padded_input_N + padding_dim;
 
     for (int i = 0; i<padded_input_N; i++){
         for (int j = 0; j<padded_input_N; j++){
@@ -17,6 +12,7 @@ void add_padding(float *input, float *padded_input, int padding_dim, int input_N
     }
 
     for (int i = padding_dim; i<(input_N + padding_dim); i++){
+        cout << i << endl;
         for (int j = padding_dim; j<(input_N + padding_dim); j++){
             padded_input[i*padded_input_N + j] = input[(i-padding_dim)*input_N + (j-padding_dim)];
         }

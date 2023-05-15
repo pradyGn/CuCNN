@@ -72,6 +72,12 @@ for (int i = 0; i < N; i++) {
     printf("%f ", delta_next[i]);
 }
 printf("\n\n");
+// Print weights
+for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++){
+    printf("%f ", weights[i*N + j]);
+}}
+printf("\n\n");
 // Print output
 for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++){

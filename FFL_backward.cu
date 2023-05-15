@@ -29,9 +29,15 @@ for (int i = 0; i < N; i++){
     sigmoid_output[i] = i;
     cout << i << endl;
     delta_next[i] = N + i;
-    for (int j = 0; i < N;i++){ 
-    delta_curr[i*N + j] = 0.0f;
-}}
+
+    for (int j = 0; j < N; j++){ 
+        delta_curr[i*N + j] = 0.0f;
+    }
+}
+
+
+
+
 float* d_sig_op;
 cudaMalloc(&d_sig_op, N * sizeof(float));
 float* d_delta_curr;

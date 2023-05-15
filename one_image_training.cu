@@ -18,7 +18,7 @@ int main(){
     float *d_output, *h_output, *d_filter, *h_filter, *h_bias, *d_bias;
 
 
-    get_image_data(train_images, train_labels, test_images, test_labels);
+    get_image_data(h_train_images, h_train_labels, h_test_images, h_test_labels);
 
     h_output = (float*)malloc(sizeof(float) * 60000 * (output_N * output_N));
     
@@ -29,7 +29,7 @@ int main(){
     initialize_filter(h_bias, filter_M, filter_M);
     cudaMalloc((void**)&d_bias, sizeof(float) * (filter_M * filter_M));
     cudaMemcpy(d_bias, h_bias, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
-    check_matrix(h_bias, filter_M, filter_M)
+    check_matrix(h_bias, filter_M, filter_M);
 
 
 
@@ -39,7 +39,7 @@ int main(){
     initialize_filter(h_filter, filter_M, filter_M);
     cudaMalloc((void**)&d_filter, sizeof(float) * (filter_M * filter_M));
     cudaMemcpy(d_filter, h_filter, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
-    check_matrix(h_filter, filter_M, filter_M)
+    check_matrix(h_filter, filter_M, filter_M);
 
 
     for (int i = 0; i < 2; i++){
@@ -58,13 +58,13 @@ int main(){
         dim3 gridsize(output_M);
         dim3 blocksize(output_M);
 
-        convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_train_image, d_output, d_bias)
+        convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_train_image, d_output, d_bias);
 
         cudaMemcpy(h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
 
         if (i == 1){
-            check_matrix(h_train_images[784*i], input_M, input_M)
-            check_matrix(h_output[784*i], output_M, output_M)
+            check_matrix(h_train_images[784*i], input_M, input_M);
+            check_matrix(h_output[784*i], output_M, output_M);
         }
 
 

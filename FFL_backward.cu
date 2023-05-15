@@ -6,10 +6,12 @@
 using namespace std;
 
 const int N = 4;
+const int bs = 1;
+
 __global__ void backward_propagation_fc_lastlayer(float* sigmoid_output,int* labels,float* delta)
 {
 int i = threadIdx.x;
-delta[i] = sigmoid_output[i] - labels[i];
+delta[i] = (sigmoid_output[i] - labels[i])/bs;
 }
 
 __global__ void backward_propagation_fc(float* sigmoid_output,float* delta_next,float* delta_curr)
@@ -17,6 +19,7 @@ __global__ void backward_propagation_fc(float* sigmoid_output,float* delta_next,
  int i = blockIdx.x * blockDim.x  + threadIdx.x;
  int j = blockIdx.x;
  delta_curr[(i % blockDim.x) + j*blockDim.x] += sigmoid_output[j]*delta_next[i % blockDim.x]; 
+ delta_curr[(i % blockDim.x) + j*blockDim.x] /= bs;
 }
 
 
@@ -34,10 +37,6 @@ for (int i = 0; i < N; i++){
         delta_curr[i*N + j] = 0.0f;
     }
 }
-
-
-
-
 float* d_sig_op;
 cudaMalloc(&d_sig_op, N * sizeof(float));
 float* d_delta_curr;

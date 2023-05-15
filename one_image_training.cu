@@ -1,4 +1,4 @@
-#include <Mnist_test.h>
+#include "Mnist_test.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>

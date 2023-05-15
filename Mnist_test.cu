@@ -6,10 +6,10 @@
 void read_mnist_dataset(float* train_images, float* train_labels, float* test_images, float* test_labels) {
 
   // Open the MNIST files.
-  FILE* train_images_file = fopen("train-images-idx3-ubyte", "rb");
-  FILE* train_labels_file = fopen("train-labels-idx1-ubyte", "rb");
-  FILE* test_images_file = fopen("t10k-images-idx3-ubyte", "rb");
-  FILE* test_labels_file = fopen("t10k-labels-idx1-ubyte", "rb");
+  FILE* train_images_file = fopen("./MNIST/MNIST_for_C/data/train-images-idx3-ubyte", "rb");
+  FILE* train_labels_file = fopen("./MNIST/MNIST_for_C/data/train-labels-idx1-ubyte", "rb");
+  FILE* test_images_file = fopen("./MNIST/MNIST_for_C/data/t10k-images-idx3-ubyte", "rb");
+  FILE* test_labels_file = fopen("./MNIST/MNIST_for_C/data/t10k-labels-idx1-ubyte", "rb");
 
   // Check if the files were opened successfully.
   if (train_images_file == NULL || train_labels_file == NULL || test_images_file == NULL || test_labels_file == NULL) {

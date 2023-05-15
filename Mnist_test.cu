@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
-#include <iostream.h>
+#include <iostream>
 
 using namespace std;
 

@@ -44,7 +44,7 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
   cout << 1 << endl;
 
   // Read the training labels.
-  for (int i = 0; i < num_train_images; i++) {
+  for (int i = 0; i < 60000; i++) {
     unsigned char label;
     fread(&label, sizeof(unsigned char), 1, train_labels_file);
     train_labels[i] = label;
@@ -53,7 +53,7 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
   cout << 1 << endl;
 
   // Read the test images.
-  for (int i = 0; i < num_test_images; i++) {
+  for (int i = 0; i < 10000; i++) {
     unsigned char image[784];
     fread(image, sizeof(unsigned char), 784, test_images_file);
     for (int j = 0; j < 784; j++) {
@@ -64,7 +64,7 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
   cout << 1 << endl;
 
   // Read the test labels.
-  for (int i = 0; i < num_test_images; i++) {
+  for (int i = 0; i < 10000; i++) {
     unsigned char label;
     fread(&label, sizeof(unsigned char), 1, test_labels_file);
     test_labels[i] = label;

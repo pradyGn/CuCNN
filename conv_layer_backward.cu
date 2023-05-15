@@ -12,13 +12,13 @@ void add_padding(float *input, float *padded_input, int padding_dim, int input_N
 
     for (int i = 0; i<padded_input_N; i++){
         for (int j = 0; j<padded_input_N; j++){
-            h_output[i*padded_input_N + j] = 0;
+            padded_input[i*padded_input_N + j] = 0;
         }
     }
 
     for (int i = padding_dim; i<(input_N + padding_dim); i++){
         for (int j = padding_dim; j<(input_N + padding_dim); j++){
-            h_output[i*padded_input_N + j] = input[(i-padding_dim)*input_N + (j-padding_dim)];
+            padded_input[i*padded_input_N + j] = input[(i-padding_dim)*input_N + (j-padding_dim)];
         }
     }
 
@@ -48,7 +48,7 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 
 int main(){
-    float *input, *padded_input
+    float *input, *padded_input;
 
     int padding_dim = 2;
     int input_N = 2;

@@ -56,6 +56,8 @@ __global__ void forward(float* O, float* X, float *W, float *b, int W_x, int W_y
     }
 }
 
+
+
 int main(){
     FeedForwardLayer();
     return 0;

@@ -115,7 +115,9 @@ int main(){
     free(h_filter);
     cout <<4 <<endl;
     free(h_weights);
+    cout <<5 <<endl;
     free(h_bias_dense);
+    cout <<6 <<endl;
     free(h_output);
 
     return 0;

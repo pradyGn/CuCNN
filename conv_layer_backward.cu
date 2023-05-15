@@ -3,6 +3,8 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
+using namespace std;
+
 void add_padding(float *input, float *padded_input, int padding_dim, int input_N, int padded_input_N){
 
     for (int i = 0; i<padded_input_N; i++){

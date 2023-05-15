@@ -10,7 +10,7 @@
 #define output_M 6
 #define output_N 6
 
-__global__ void convolutional_layer2D (float *filter, float *input, float *output)
+__global__ void convolutional_layer2D (float *filter, float *input, float *output, float bias)
 {
     int i = threadIdx.x;
     int j = blockIdx.x;
@@ -31,7 +31,7 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
     
     int output_pos = i + (j*output_N);
 
-    output[output_pos] = sum;
+    output[output_pos] = sum + bias;
     
     
 
@@ -61,7 +61,8 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input;
+    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input, bias;
+    float bias = 0.1;
 
     h_output = (float*)malloc(sizeof(float) * (output_M * output_M));
     h_filter = (float*)malloc(sizeof(float) * (filter_M * filter_M));
@@ -92,7 +93,7 @@ int main(){
     dim3 gridsize(output_M);
     dim3 blocksize(output_M);
 
-    convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_input, d_output);
+    convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_input, d_output, bias);
 
     cudaMemcpy(h_output, d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
 

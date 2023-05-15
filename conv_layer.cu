@@ -61,7 +61,7 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input, bias;
+    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input, h_bias, d_bias;
     float bias = 0.1;
 
     h_output = (float*)malloc(sizeof(float) * (output_M * output_M));
@@ -88,6 +88,7 @@ int main(){
     cudaMemcpy(d_filter, h_filter, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
     cudaMemcpy(d_input, h_input, sizeof(float) * (input_M * input_M), cudaMemcpyHostToDevice);
     cudaMemcpy(d_output, h_output, sizeof(float) * (output_M * output_M), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_bias, h_bias, sizeof(float), cudaMemcpyHostToDevice);
 
     
     dim3 gridsize(output_M);

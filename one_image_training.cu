@@ -119,7 +119,7 @@ int main(){
     free(h_bias_dense);
     cout <<6 <<endl;
     free(h_output);
-
+    cout <<7 <<endl;
     return 0;
 
 }

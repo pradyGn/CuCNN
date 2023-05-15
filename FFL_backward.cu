@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
+#include <iostream>
+
+using namespace std;
 
 const int N = 4;
 __global__ void backward_propagation_fc_lastlayer(float* sigmoid_output,int* labels,float* delta)
@@ -21,8 +24,10 @@ int main(){
 float* sigmoid_output = (float*)malloc(N * sizeof(float));
 float* delta_curr = (float*)malloc(N*N * sizeof(float));
 float* delta_next = (float*)malloc(N * sizeof(float));
+
 for (int i = 0; i < N; i++){
     sigmoid_output[i] = i;
+    cout << i << endl;
     delta_next[i] = N + i;
     for (int j = 0; i < N;i++){ 
     delta_curr[i*N + j] = 0.0f;

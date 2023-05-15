@@ -17,7 +17,7 @@ int main(){
 
     float  *h_output, *d_filter, *h_filter, *h_bias_conv, *d_bias_conv, *d_bias_dense, *h_bias_dense, *h_weights, *d_weights;
 
-    float *h_dense_output, *d_dense_output;
+    float *h_dense_output;
 
 
     get_image_data(h_train_images, h_train_labels, h_test_images, h_test_labels);

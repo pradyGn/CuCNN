@@ -4,9 +4,9 @@
 
 
 void initialize_dense_weights_and_bias(float* weights, float* bias){
-for (int i = 0; i < output_M; i++) {
+for (int i = 0; i < dense_output_M; i++) {
     for(int j = 0; j < output_N; j++) {
-        weights[i*N + j] = 0.5f - float(rand()) / float(RAND_MAX);
+        weights[i*dense_output_M + j] = 0.5f - float(rand()) / float(RAND_MAX);
         }
     
     bias[i] = 0.5f - float(rand()) / float(RAND_MAX);
@@ -24,8 +24,8 @@ for (int i = 0; i < output_M; i++) {
 __global__ void forward_propagation_fc(float* input, float* weights, float* bias, float* output) {
          int i = threadIdx.x;
          float sum = 0.0f;
-         for(int j = 0; j < N; j++){
-         sum += bias[j] + weights[i*N + j] * input[j];
+         for(int j = 0; j < output_N; j++){
+         sum += bias[j] + weights[i*dense_output_M + j] * input[j];
         }
         output[i] = sum;
 }

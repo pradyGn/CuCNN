@@ -99,12 +99,10 @@ int main(){
         cudaFree(d_train_image);
 
     }
-    cout <<2 <<endl;
     cudaFree(d_filter);
     cudaFree(d_bias_conv);
     cudaFree(d_weights);
     cudaFree(d_bias_dense);
-    cout <<3 <<endl;
     // Free the memory.
     free(h_train_images);
     free(h_train_labels);
@@ -113,13 +111,9 @@ int main(){
     free(h_output);
     free(h_bias_conv);
     free(h_filter);
-    cout <<4 <<endl;
     free(h_weights);
-    cout <<5 <<endl;
     free(h_bias_dense);
-    cout <<6 <<endl;
-    free(h_output);
-    cout <<7 <<endl;
+    free(h_dense_output);
     return 0;
 
 }

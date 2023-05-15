@@ -33,7 +33,7 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
   cout << 1 << endl;
 
   // Read the training images.
-  for (int i = 0; i < num_train_images; i++) {
+  for (int i = 0; i < 60000; i++) {
     unsigned char image[784];
     fread(image, sizeof(unsigned char), 784, train_images_file);
     for (int j = 0; j < 784; j++) {

@@ -6,7 +6,7 @@
 using namespace std;
 
 const int N = 4;
-const int bs = 1;
+const int bs = 2;
 const int lambda = 0.1;
 
 __global__ void backward_propagation_fc_lastlayer(float* sigmoid_output,int* labels,float* delta)

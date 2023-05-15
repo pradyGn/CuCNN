@@ -22,7 +22,7 @@ __global__ void backward_propagation_fc(float* sigmoid_output,float* delta_next,
  delta_curr[i] += sigmoid_output[j]*delta_next[i % blockDim.x]; 
  delta_curr[i] /= bs;
  //delta_curr[(i % blockDim.x) + j*blockDim.x] += lambda*weights[(i % blockDim.x) + j*blockDim.x];
- delta_curr[i] += lambda*weights[i*N + j];
+ delta_curr[i*N + j] += lambda*weights[i*N + j];
 }
 
 

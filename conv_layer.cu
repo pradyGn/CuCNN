@@ -61,13 +61,14 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input, h_bias, d_bias;
-    float bias = 0.1;
+    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input, *h_bias, *d_bias;
 
     h_output = (float*)malloc(sizeof(float) * (output_M * output_M));
     h_filter = (float*)malloc(sizeof(float) * (filter_M * filter_M));
     h_input = (float*)malloc(sizeof(float) * (input_M * input_M));
+    h_input = (float*)malloc(sizeof(float));
 
+    h_bias = 0.1;
     initialize(h_filter, filter_M, filter_M);
     initialize(h_input, input_M, input_M);
     

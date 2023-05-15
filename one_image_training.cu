@@ -13,12 +13,20 @@ int main(){
     float* test_images = (float*)malloc(sizeof(float) * 10000 * 784);
     float* test_labels = (float*)malloc(sizeof(float) * 10000);
 
-    get_image_data(train_images, train_labels, test_images, test_labels)
+    get_image_data(train_images, train_labels, test_images, test_labels);
 
     //Print out the first image.
     for (int i = 0; i < 784; i++) {
       printf("%f ", train_images[i]);
     }
     printf("\n");
+
+    // Free the memory.
+    free(train_images);
+    free(train_labels);
+    free(test_images);
+    free(test_labels);
+
+    return 0;
 
 }

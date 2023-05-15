@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
+#include <iostream.h>
+
+using namespace std;
 
 // Function to read the MNIST dataset.
 void read_mnist_dataset(float* train_images, float* train_labels, float* test_images, float* test_labels) {
@@ -17,6 +20,8 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
     exit(1);
   }
 
+  cout << 1 << endl;
+
   // Read the number of training images.
   int num_train_images;
   fread(&num_train_images, sizeof(int), 1, train_images_file);
@@ -24,6 +29,8 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
   // Read the number of test images.
   int num_test_images;
   fread(&num_test_images, sizeof(int), 1, test_images_file);
+
+  cout << 1 << endl;
 
   // Read the training images.
   for (int i = 0; i < num_train_images; i++) {
@@ -34,12 +41,16 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
     }
   }
 
+  cout << 1 << endl;
+
   // Read the training labels.
   for (int i = 0; i < num_train_images; i++) {
     unsigned char label;
     fread(&label, sizeof(unsigned char), 1, train_labels_file);
     train_labels[i] = label;
   }
+
+  cout << 1 << endl;
 
   // Read the test images.
   for (int i = 0; i < num_test_images; i++) {
@@ -50,12 +61,16 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
     }
   }
 
+  cout << 1 << endl;
+
   // Read the test labels.
   for (int i = 0; i < num_test_images; i++) {
     unsigned char label;
     fread(&label, sizeof(unsigned char), 1, test_labels_file);
     test_labels[i] = label;
   }
+
+  cout << 1 << endl;
 
   // Close the files.
   fclose(train_images_file);

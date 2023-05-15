@@ -1,26 +1,65 @@
-#include "MNIST/MNIST_for_C/mnist.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <cuda.h>
 
-int main(void)
-{
-    // call to store mnist in array
-    load_mnist();
+// Function to read the MNIST dataset.
+void read_mnist_dataset(float* train_images, float* train_labels, float* test_images, float* test_labels) {
 
-    // print pixels of first data in test dataset
-    int i;
-    for (i=0; i<784; i++) {
-        printf("%1.1f ", test_image[0][i]);
-        if ((i+1) % 28 == 0) putchar('\n');
+  // Open the MNIST files.
+  FILE* train_images_file = fopen("train-images-idx3-ubyte", "rb");
+  FILE* train_labels_file = fopen("train-labels-idx1-ubyte", "rb");
+  FILE* test_images_file = fopen("t10k-images-idx3-ubyte", "rb");
+  FILE* test_labels_file = fopen("t10k-labels-idx1-ubyte", "rb");
+
+  // Check if the files were opened successfully.
+  if (train_images_file == NULL || train_labels_file == NULL || test_images_file == NULL || test_labels_file == NULL) {
+    printf("Could not open MNIST files.\n");
+    exit(1);
+  }
+
+  // Read the number of training images.
+  int num_train_images;
+  fread(&num_train_images, sizeof(int), 1, train_images_file);
+
+  // Read the number of test images.
+  int num_test_images;
+  fread(&num_test_images, sizeof(int), 1, test_images_file);
+
+  // Read the training images.
+  for (int i = 0; i < num_train_images; i++) {
+    unsigned char image[784];
+    fread(image, sizeof(unsigned char), 784, train_images_file);
+    for (int j = 0; j < 784; j++) {
+      train_images[i * 784 + j] = image[j] / 255.0f;
     }
+  }
 
-    // print first label in test dataset
-    printf("label: %d\n", test_label[0]);
+  // Read the training labels.
+  for (int i = 0; i < num_train_images; i++) {
+    unsigned char label;
+    fread(&label, sizeof(unsigned char), 1, train_labels_file);
+    train_labels[i] = label;
+  }
 
-    // save image of first data in test dataset as .pgm file
-    save_mnist_pgm(test_image, 0);
+  // Read the test images.
+  for (int i = 0; i < num_test_images; i++) {
+    unsigned char image[784];
+    fread(image, sizeof(unsigned char), 784, test_images_file);
+    for (int j = 0; j < 784; j++) {
+      test_images[i * 784 + j] = image[j] / 255.0f;
+    }
+  }
 
-    // show all pixels and labels in test dataset
-    print_mnist_pixel(test_image, NUM_TEST);
-    print_mnist_label(test_label, NUM_TEST);
+  // Read the test labels.
+  for (int i = 0; i < num_test_images; i++) {
+    unsigned char label;
+    fread(&label, sizeof(unsigned char), 1, test_labels_file);
+    test_labels[i] = label;
+  }
 
-    return 0;
+  // Close the files.
+  fclose(train_images_file);
+  fclose(train_labels_file);
+  fclose(test_images_file);
+  fclose(test_labels_file);
 }

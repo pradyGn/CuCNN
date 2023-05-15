@@ -10,7 +10,7 @@
 #define output_M 6
 #define output_N 6
 
-__global__ void convolutional_layer2D (float *filter, float *input, float *output, float bias)
+__global__ void convolutional_layer2D (float *filter, float *input, float *output, double bias)
 {
     int i = threadIdx.x;
     int j = blockIdx.x;
@@ -61,7 +61,8 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input, *h_bias, *d_bias;
+    float *d_output, *h_output, *d_filter, *h_filter, *d_input, *h_input;
+    double *h_bias, *d_bias;
 
     h_output = (float*)malloc(sizeof(float) * (output_M * output_M));
     h_filter = (float*)malloc(sizeof(float) * (filter_M * filter_M));

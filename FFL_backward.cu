@@ -6,7 +6,7 @@
 using namespace std;
 
 const int N = 4;
-const int bs = 2;
+const int bs = 1;
 const int lambda = 0.1;
 
 __global__ void backward_propagation_fc_lastlayer(float* sigmoid_output,int* labels,float* delta)
@@ -21,7 +21,8 @@ __global__ void backward_propagation_fc(float* sigmoid_output,float* delta_next,
  int j = blockIdx.x;
  delta_curr[(i % blockDim.x) + j*blockDim.x] += sigmoid_output[j]*delta_next[i % blockDim.x]; 
  delta_curr[(i % blockDim.x) + j*blockDim.x] /= bs;
- delta_curr[(i % blockDim.x) + j*blockDim.x] += lambda*weights[(i % blockDim.x) + j*blockDim.x];
+ //delta_curr[(i % blockDim.x) + j*blockDim.x] += lambda*weights[(i % blockDim.x) + j*blockDim.x];
+  delta_curr[(i % blockDim.x) + j*blockDim.x] += lambda*weights[i*N + j];
 }
 
 

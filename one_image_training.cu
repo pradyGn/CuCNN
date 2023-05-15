@@ -92,7 +92,8 @@ int main(){
             check_matrix(&h_output[784*i], output_M, output_M);
             check_matrix(&h_dense_output[10*i], 1, dense_output_M);
         }
-
+        cout<<1<<endl;
+        
         cudaFree(d_output);
         cudaFree(d_dense_output);
         cudaFree(d_train_image);

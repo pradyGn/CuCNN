@@ -44,15 +44,16 @@ int main(){
 
     for (int i = 0; i < 2; i++){
 
-        initialize_output(h_output[784*i], output_N, output_N);
+        initialize_output(&h_output[784*i], output_N, output_N);
 
+        float *d_train_image;
 
         cudaMalloc((void**)&d_output, sizeof(float) * (output_N * output_N));
         cudaMalloc((void**)&d_train_image, sizeof(float) * 784);
 
 
-        cudaMemcpy(d_output, h_output[784*i], sizeof(float) * (output_N * output_N), cudaMemcpyHostToDevice);
-        cudaMemcpy(d_train_image, h_train_images[784*i], sizeof(float) * 784, cudaMemcpyHostToDevice);
+        cudaMemcpy(d_output, &h_output[784*i], sizeof(float) * (output_N * output_N), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_train_image, &h_train_images[784*i], sizeof(float) * 784, cudaMemcpyHostToDevice);
         
 
         dim3 gridsize(output_M);
@@ -60,11 +61,11 @@ int main(){
 
         convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_train_image, d_output, d_bias);
 
-        cudaMemcpy(h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
 
         if (i == 1){
-            check_matrix(h_train_images[784*i], input_M, input_M);
-            check_matrix(h_output[784*i], output_M, output_M);
+            check_matrix(&h_train_images[784*i], input_M, input_M);
+            check_matrix(&h_output[784*i], output_M, output_M);
         }
 
 

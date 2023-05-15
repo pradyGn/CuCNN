@@ -31,7 +31,7 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
     
     int output_pos = i + (j*output_N);
 
-    output[output_pos] = sum + bias;
+    output[output_pos] = sum + bias[0];
     
     
 
@@ -67,9 +67,9 @@ int main(){
     h_output = (float*)malloc(sizeof(float) * (output_M * output_M));
     h_filter = (float*)malloc(sizeof(float) * (filter_M * filter_M));
     h_input = (float*)malloc(sizeof(float) * (input_M * input_M));
-    h_bais = (float*)malloc(sizeof(float));
+    h_bias = (float*)malloc(sizeof(float));
 
-    h_bias = 0.1;
+    h_bias[0] = 0.1;
     initialize(h_filter, filter_M, filter_M);
     initialize(h_input, input_M, input_M);
     

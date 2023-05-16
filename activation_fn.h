@@ -25,3 +25,8 @@ __global__ void softmax(float* denom, float* input, float* softmax_return){
     softmax_return[i] = exp(input[i])/denom[0];
 
 }
+
+__global__ void cross_entropy_loss(float *last_layer, int* labels, float *loss){
+    int i = threadIdx.x;
+    loss[0] += -1*labels[i]*log(last_layer[i]);
+}

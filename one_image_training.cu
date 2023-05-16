@@ -65,6 +65,12 @@ int main(){
     //check_matrix(h_bias_dense, 1, dense_output_M);
     //check_matrix(h_weights, dense_output_M, (output_M * output_M));
 
+    float *h_loss, *d_loss;
+    h_loss = (float*)malloc(sizeof(float));
+    h_loss[0] = 0;
+    cudaMalloc((void**)&d_loss, sizeof(float));
+    cudaMemcpy(d_loss, h_loss, sizeof(float), cudaMemcpyHostToDevice);
+
     struct timeval t1, t2;
     gettimeofday(&t1, 0);
 
@@ -216,6 +222,12 @@ int main(){
         //}
 
         softmax<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output, d_dense_output);
+
+
+        dim3 gridsize_loss_dense(1);
+        dim3 blocksize_loss_dense(dense_output_M);
+        cross_entropy_loss<<<gridsize_loss_dense, blocksize_loss_dense>>>(d_dense_output, d_train_label, d_loss)
+        
 
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
         //if (i == 0){
@@ -422,6 +434,11 @@ int main(){
     cout << "Total training time (ms): " << time << endl;
     cout << "flops / ms: " << flops_p_sec << endl;
     //printf("%10ld %10f %10f %10f", p, time, flops, bandwidth);
+
+
+    cudaMemcpy(h_loss, d_loss, sizeof(float), cudaMemcpyDeviceToHost);
+
+    cout << h_loss << endl;
 
 
 

@@ -406,7 +406,7 @@ int main(){
         free(h_delta_curr);
         //free(h_dense_grad_input_act);
         //free(h_dense_grad_input);
-        free(h_weights_T);
+        //free(h_weights_T);
         cudaFree(d_min);
         cudaFree(d_max);
         free(h_max);

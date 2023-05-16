@@ -438,7 +438,7 @@ int main(){
 
     cudaMemcpy(h_loss, d_loss, sizeof(float), cudaMemcpyDeviceToHost);
 
-    cout << h_loss << endl;
+    cout << h_loss[0] << endl;
 
 
 

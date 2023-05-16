@@ -127,12 +127,15 @@ int main(){
         //cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
         
+        dim3 gridsize_wts_update(1);
+        dim3 blocksize_wts_update(dense_output_M * (output_M * output_M));
+        weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
+        cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         if (i == 1){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-        
+            check_matrix(h_weights,dense_output_M,output_M*output_M);
         }
         
         cudaFree(d_output);

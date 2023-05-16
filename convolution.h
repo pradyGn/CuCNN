@@ -57,3 +57,4 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
     }
     printf("\n");
 }
+

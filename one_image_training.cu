@@ -8,6 +8,12 @@
 #include <stdlib.h>
 #include <cuda.h>
 #include <iostream>
+#include <math.h>
+#include <cmath>
+
+const float MAXX = INFINITY;
+const float MINN = -INFINITY;
+
 using namespace std;
 
 int main(){
@@ -118,6 +124,23 @@ int main(){
         forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
 
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+        //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
+        
+        float *h_min, *h_max, *d_max, *d_min;
+        h_min = (float*)malloc(sizeof(float));
+        h_max = (float*)malloc(sizeof(float));
+        h_min[0] = MINN;
+        h_max[0] = MAXX;
+
+        cudaMalloc((void**)&d_max, sizeof(float));
+        cudaMalloc((void**)&d_min, sizeof(float));
+
+        cudaMemcpy(d_max, h_max, sizeof(float), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_min, h_min, sizeof(float), cudaMemcpyHostToDevice);
+
+        calulate_min_max<<<1, dense_output_M>>>(d_dense_output, d_min, d_max);
+        min_max_normalization<<<1, dense_output_M>>>(d_dense_output, d_min, d_max);
+
         cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
         if (i == 0){
             cout<<"Checking h_dense_output_conv before sigmoid"<<endl;
@@ -128,28 +151,33 @@ int main(){
             //check_matrix(h_dense_output,1,dense_output_M);
         }
 
-        dim3 gridsize_sig_dense(1);
-        dim3 blocksize_sig_dense(dense_output_M * 1);
+        //dim3 gridsize_sig_dense(1);
+        //dim3 blocksize_sig_dense(dense_output_M * 1);
         //sigmoid_function<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_dense_output,d_dense_output);
 
-        float *h_dense_output;
-        h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
-        cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
-        if (i == 0){
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            check_matrix(h_dense_output,1,dense_output_M);
-            cout<<"Hello from 1"<<endl;
-        }
 
+        dim3 gridsize_sig_dense(1);
+        dim3 blocksize_sig_dense(dense_output_M * 1);
         float *h_denom, *d_denom;
         h_denom = (float*)malloc(sizeof(float));
         h_denom[0] = 0;
         cudaMalloc((void**)&d_denom, sizeof(float));
         cudaMemcpy(d_denom, h_denom, sizeof(float), cudaMemcpyHostToDevice);
         softmax_denom<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output);
+
+        float *h_dense_output;
+        h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
+        cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
+        if (i == 0){
+            cout<<"Checking h_dense_output_conv after sigmoid"<<endl;
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            check_matrix(h_dense_output,1,dense_output_M);
+            //cout<<"Hello from 1"<<endl;
+        }
+
 
         cudaMemcpy(h_denom, d_denom, sizeof(float), cudaMemcpyDeviceToHost);
 

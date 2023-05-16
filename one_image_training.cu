@@ -38,12 +38,6 @@ int main(){
     initialize_filter(h_bias_conv, output_M, output_M);
     cudaMalloc((void**)&d_bias_conv, sizeof(float) * (output_M * output_M));
     cudaMemcpy(d_bias_conv, h_bias_conv, sizeof(float) * (output_M * output_M), cudaMemcpyHostToDevice);
-    //h_bias_conv = (float*)malloc(sizeof(float) * (filter_M * filter_M));
-    //initialize_filter(h_bias_conv, filter_M, filter_M);
-    //cudaMalloc((void**)&d_bias_conv, sizeof(float) * (filter_M * filter_M));
-    //cudaMemcpy(d_bias_conv, h_bias_conv, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
-    //check_matrix(h_bias_conv, filter_M, filter_M);
-
 
 
 
@@ -136,22 +130,6 @@ int main(){
         dim3 gridsize_dense(1);
         dim3 blocksize_dense(dense_output_M);
         forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
-        //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
-        //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
-        //check_matrix(h_weights, dense_output_M, output_M*output_M);
-        //forward_propogation_check(&h_output[784*i], h_weights);
-        //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
-        //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
-
-        //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
-        //if (i == 0){
-        //    cout<<"Checking h_dense_output_conv before sigmoid"<<endl;
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-        //    check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //check_matrix(h_dense_output,1,dense_output_M);
-        //}
         
         float *h_min, *h_max, *d_max, *d_min;
         h_min = (float*)malloc(sizeof(float));
@@ -172,22 +150,6 @@ int main(){
 
         min_max_normalization<<<1, dense_output_M>>>(d_dense_output, d_min, d_max);
 
-        //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
-        //if (i == 0){
-        //    cout << h_max[0] << endl;
-        //    cout << h_min[0] << endl;
-        //    cout<<"Checking h_dense_output_conv before sigmoid"<<endl;
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //check_matrix(h_dense_output,1,dense_output_M);
-        //}
-
-        //dim3 gridsize_sig_dense(1);
-        //dim3 blocksize_sig_dense(dense_output_M * 1);
-        //sigmoid_function<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_dense_output,d_dense_output);
-
 
         dim3 gridsize_sig_dense(1);
         dim3 blocksize_sig_dense(dense_output_M * 1);
@@ -198,30 +160,6 @@ int main(){
         cudaMemcpy(d_denom, h_denom, sizeof(float), cudaMemcpyHostToDevice);
         softmax_denom<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output);
 
-        //cudaMemcpy(h_denom, d_denom, sizeof(float), cudaMemcpyDeviceToHost);
-        //cout << h_denom[0] << endl;
-
-
-
-        //float *h_dense_output;
-        //h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
-        //cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
-        //if (i == 0){
-        //    cout<<"Checking h_dense_output_conv after softmax"<<endl;
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-        //    check_matrix(h_dense_output,1,dense_output_M);
-            //cout<<"Hello from 1"<<endl;
-        //}
-
-
-        //cudaMemcpy(h_denom, d_denom, sizeof(float), cudaMemcpyDeviceToHost);
-
-        //if (i == 0){
-        //    cout << h_denom[0] << endl;
-        //}
 
         softmax<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output, d_dense_output);
 
@@ -229,20 +167,6 @@ int main(){
         dim3 gridsize_loss_dense(1);
         dim3 blocksize_loss_dense(dense_output_M);
         cross_entropy_loss<<<gridsize_loss_dense, blocksize_loss_dense>>>(d_dense_output, d_train_label, d_loss, d_loss_arr);
-        
-
-        //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
-        //if (i == 0){
-        //    cout << h_max[0] << endl;
-        //    cout << h_min[0] << endl;
-        //    cout<<"Checking h_dense_output_conv after softmax"<<endl;
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-        //    check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //check_matrix(h_dense_output,1,dense_output_M);
-        //}
-
         
         
         // Backprop for last layer
@@ -270,43 +194,12 @@ int main(){
         input_grad<<<gridsize_dense_grad_input, blocksize_dense_grad_input>>>(d_dense_grad_input, d_dense_output);
 
 
-        //float *h_dense_grad_input;
-        //h_dense_grad_input = (float*)malloc(sizeof(float) * (dense_output_M));
-        //cudaMemcpy(h_dense_grad_input, d_dense_grad_input, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
-        //if (i == 0){
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-        //    check_matrix(h_dense_grad_input, 1, dense_output_M);
-        //    cout<<"Hello from 1"<<endl;
-        //}
-
-
-
-
         float *h_weights_T, *d_weights_T;
         h_weights_T = (float*)malloc(sizeof(float) * dense_output_M * (output_M * output_M));
         cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         
 
         transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
-
-        //if (i == 0){
-        //    cout<<"weights"<<endl;
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-        //    check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //check_matrix(h_weights, dense_output_M, (output_M * output_M));
-            //cout<<"Hello from 1"<<endl;
-        //}
-
-        //cout<<"Yoloooooooo weights"<<endl;
-        //check_matrix(h_weights, dense_output_M, (output_M * output_M));
-
-        //cout<<"Transpose of weights"<<endl;
-        //check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
 
         cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
         cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
@@ -321,40 +214,6 @@ int main(){
         float *d_dense_grad_input_act;
         cudaMalloc((void**)&d_dense_grad_input_act, sizeof(float) * (output_M * output_M));
         matrix_mul<<<gridsize_dense_grad_mm, blocksize_dense_grad_mm>>>(d_dense_grad_input, d_weights_T, d_dense_grad_input_act);
-        
-
-
-
-
-
-        //float *h_dense_grad_input_act;
-        //h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
-        //cudaMemcpy(h_dense_grad_input_act, d_dense_grad_input_act, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
-
-        //if (i == 0){
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-        //    check_matrix(h_dense_grad_input_act, output_M, output_M);
-            //cout<<"Hello from 1"<<endl;
-        //}
-
-
-
-
-
-
-        //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
-        //if (i == 0){
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
-            //cout<<"Hello from 2"<<endl;
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //cout<<"weights from 2 yolooooooooo"<<endl;
-        //}
 
 
         dim3 gridsize_fg(filter_M);
@@ -366,19 +225,6 @@ int main(){
 
         filter_grad_func <<<gridsize_fg, blocksize_fg>>>(d_dense_grad_input_act, d_train_image, d_filter_grad);
 
-        //h_filter_grad = (float*)malloc(sizeof(float) * (filter_M * filter_M));
-        //cudaMemcpy(h_filter_grad, d_filter_grad, sizeof(float) * (filter_M * filter_M), cudaMemcpyDeviceToHost);
-        //if (i == 0){
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-        //    check_matrix(&h_train_images[784*i],input_M,input_M);
-            //cout<<"Hello from 2"<<endl;
-        //    check_matrix(h_filter_grad,filter_M,filter_M);
-            //cout<<"weights from 2 yolooooooooo"<<endl;
-        //}
-
-
         dim3 gridsize_fup(1);
         dim3 blocksize_fup(filter_M*filter_M);
         weight_update<<<gridsize_fup, blocksize_fup>>>(d_filter_grad, d_filter);
@@ -387,12 +233,6 @@ int main(){
         dim3 blocksize_bup(output_M*output_M);
         weight_update<<<gridsize_bup, blocksize_bup>>>(d_dense_grad_input_act, d_bias_conv);
 
-
-        //cudaMemcpy(h_filter, d_filter, sizeof(float) * (filter_M * filter_M), cudaMemcpyDeviceToHost);
-        //cudaMemcpy(h_bias_conv, d_bias_conv, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
-
-        //check_matrix(h_filter,filter_M,filter_M);
-        //check_matrix(h_bias_conv,output_M,output_M);
         
         cudaFree(d_output);
         cudaFree(d_train_image);
@@ -406,8 +246,6 @@ int main(){
         free(h_delta_ll);
         free(one_hot_label);
         free(h_delta_curr);
-        //free(h_dense_grad_input_act);
-        //free(h_dense_grad_input);
         free(h_weights_T);
         cudaFree(d_min);
         cudaFree(d_max);
@@ -415,24 +253,20 @@ int main(){
         free(h_min);
         cudaFree(d_denom);
         free(h_denom);
-        //free(h_filter_grad);
         cudaFree(d_filter_grad);
 
 
     }
 
-    //double time = t.toc();
     gettimeofday(&t2, 0);
     double time = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000.0;
 
     double flops = 60000*(filter_N * filter_N * output_M * 2 + (output_M * output_M) * dense_output_M * 5 + output_M * output_M * filter_N * 2); // TODO: calculate from m, n, k, NREPEATS, time
     double flops_p_sec = (flops/time);
-    double bandwidth = 0; // TODO: calculate from m, n, k, NREPEATS, time
+    double bandwidth = 0;
     cout << "Total training time (ms): " << time << endl;
     cout << "Total Flops: " << flops << endl;
     cout << "flops / ms: " << flops_p_sec << endl;
-    //printf("%10ld %10f %10f %10f", p, time, flops, bandwidth);
-
 
     cudaMemcpy(h_loss, d_loss, sizeof(float), cudaMemcpyDeviceToHost);
 
@@ -449,7 +283,6 @@ int main(){
     cudaFree(d_bias_conv);
     cudaFree(d_weights);
     cudaFree(d_bias_dense);
-    // Free the memory.
     free(h_train_images);
     free(h_train_labels);
     free(h_test_images);

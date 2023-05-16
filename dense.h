@@ -73,12 +73,12 @@ __global__ void calulate_min_max(float *input_array, float *min, float *max){
     int i = threadIdx.x;
 
 
-    for (int i = 0; i < dense_output_M; i++){
-        if (input_array[i] > max[0]){
-        max[0] = input_array[i];
+    for (int j = 0; j < dense_output_M; j++){
+        if (input_array[j] > max[0]){
+        max[0] = input_array[j];
         }
-        if (input_array[i] < min[0]){
-            min[0] = input_array[i];
+        if (input_array[j] < min[0]){
+            min[0] = input_array[j];
     }
     }
 }

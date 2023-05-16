@@ -61,11 +61,11 @@ __global__ void weight_update(float* delta_curr,float* weights)
 
  __global__ void matrix_mul(float* input, float* weights, float* output) {
          int i = threadIdx.x;
-         float sum = 0.0f;
+         //float sum = 0.0f;
          for(int j = 0; j < dense_output_M; j++){
-         sum += weights[i*dense_output_M + j] * input[j];
+         output[i] += weights[i*dense_output_M + j] * input[j];
         }
-        output[i] = sum;
+        //output[i] = sum;
 }
 
 

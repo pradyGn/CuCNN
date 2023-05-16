@@ -219,7 +219,7 @@ int main(){
             cout<<"Checking h_dense_output_conv after softmax"<<endl;
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
             //check_matrix(h_dense_output,1,dense_output_M);
         }

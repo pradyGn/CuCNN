@@ -24,7 +24,7 @@ void transposeNaive(float *Array, int m, int n)
 void initialize_output(float *matrix, int matrix_M, int matrix_N){
     for (int i = 0; i < matrix_M; i++){
         for (int j = 0; j < matrix_N; j++){
-            matrix[(i*matrix_N) + j] = i+j;
+            matrix[(i*matrix_N) + j] = j;
         }
     }
 }
@@ -58,7 +58,7 @@ int main(){
 
 
 
-/*
+    /*
     
 
     cudaMalloc((void**)&d_input, sizeof(float) * (4 * 7));
@@ -81,7 +81,7 @@ int main(){
     cudaFree(d_output);
     cudaFree(d_input);
     free(output);
-*/
+    */
     
     free(input);
 

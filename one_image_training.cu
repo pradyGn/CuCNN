@@ -136,7 +136,7 @@ int main(){
             cout<<"Hello from 2"<<endl;
         }
 
-        weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
+        //weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
         cout<<3<<endl;
         //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         cout<<4<<endl;

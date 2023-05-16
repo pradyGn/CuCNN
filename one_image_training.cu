@@ -412,7 +412,13 @@ int main(){
 
     }
 
-    
+    double time = t.toc();
+    double flops = filter_N * filter_N * output_M * 2 + (output_M * output_M) * dense_output_M * 5 + output_M * output_M * filter_N * 2; // TODO: calculate from m, n, k, NREPEATS, time
+    double flops_p_sec = (flops/time)*pow(10, -9);
+    double bandwidth = 0; // TODO: calculate from m, n, k, NREPEATS, time
+    cout << "Total training time: " << time/pow(10, -9) << endl;
+    cout << "flops / sec: " << flops_p_sec << endl;
+    //printf("%10ld %10f %10f %10f", p, time, flops, bandwidth);
 
 
 

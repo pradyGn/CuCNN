@@ -125,6 +125,16 @@ int main(){
 
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
+
+        cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
+        if (i == 0){
+            cout<<"Checking h_dense_output_conv before sigmoid"<<endl;
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            //check_matrix(h_dense_output,1,dense_output_M);
+        }
         
         float *h_min, *h_max, *d_max, *d_min;
         h_min = (float*)malloc(sizeof(float));

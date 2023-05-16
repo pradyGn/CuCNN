@@ -141,7 +141,7 @@ int main(){
         weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
         
 
-        dim3 gridsize_dense_grad_input(1)
+        dim3 gridsize_dense_grad_input(1);
         dim3 blocksize_dense_grad_input(dense_output_M);
 
         input_grad<<<gridsize_dense_grad_input, blocksize_dense_grad_input>>>(d_dense_grad_input, d_dense_output);

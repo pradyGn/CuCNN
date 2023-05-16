@@ -345,7 +345,7 @@ int main(){
         dim3 gridsize_fg(filter_M);
         dim3 blocksize_fg(filter_M);
 
-        float *h_filter_grad, *d_filter_grad;
+        float *d_filter_grad; //h_filter_grad
         cudaMalloc((void**)&d_filter_grad, sizeof(float) * (filter_M * filter_M));
 
 
@@ -405,7 +405,7 @@ int main(){
         free(h_min);
         cudaFree(d_denom);
         free(h_denom);
-        free(h_filter_grad);
+        //free(h_filter_grad);
         cudaFree(d_filter_grad);
 
 

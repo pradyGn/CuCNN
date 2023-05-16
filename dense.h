@@ -50,3 +50,10 @@ __global__ void weight_update(float* delta_curr,float* weights)
  int i = blockIdx.x * blockDim.x  + threadIdx.x;
  weights[i] -= lr*delta_curr[i];
  }
+
+ __global__ void input_grad(float *grad_t1, float *dense_output){
+
+    int i = threadIdx.x;
+    grad_t1[i] = 1 - (1/dense_output[i]);
+
+ }

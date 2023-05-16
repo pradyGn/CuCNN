@@ -6,5 +6,5 @@
 # define output_M 24
 # define dense_output_M 10
 # define bs 1
-# define lr 1000
-# define lambda 1
+# define lr 0.01
+# define lambda 0.1

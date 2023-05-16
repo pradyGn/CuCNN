@@ -18,6 +18,7 @@ int main(){
 
     float  *h_output, *d_filter, *h_filter, *h_bias_conv, *d_bias_conv, *d_bias_dense, *h_bias_dense, *h_weights, *d_weights;
 
+
     float *h_dense_output;
 
 
@@ -59,13 +60,22 @@ int main(){
         initialize_output(&h_output[784*i], output_N, output_N);
         initialize_dense_output(&h_dense_output[10*i]);
         
+
+
+
         int *d_train_label;
         float *d_train_image, *h_delta_ll, *d_delta_ll, *d_delta_curr, *h_delta_curr;
-        float *d_dense_output, *d_output;
+        float *d_dense_output, *d_output, *d_dense_grad_input;
+
+
+
 
         h_delta_ll = (float*)malloc(sizeof(float) * dense_output_M*1);
         h_delta_curr = (float*)malloc(sizeof(float) * dense_output_M*(output_M*output_M));
         initialize_dense_output(h_delta_ll);
+
+
+
 
         cudaMalloc((void**)&d_delta_curr, sizeof(float) * dense_output_M*(output_M*output_M));
         cudaMalloc((void**)&d_delta_ll, sizeof(float) * dense_output_M*1);
@@ -73,6 +83,7 @@ int main(){
         cudaMalloc((void**)&d_train_image, sizeof(float) * 784);
         cudaMalloc((void**)&d_dense_output, sizeof(float) * dense_output_M);
         cudaMalloc((void**)&d_train_label, sizeof(int) * dense_output_M);
+        cudaMalloc((void**)&d_dense_grad_input, sizeof(float) * dense_output_M);
 
         // One hot labels
         int* one_hot_label = (int*)malloc(sizeof(int) * dense_output_M);
@@ -113,35 +124,46 @@ int main(){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            check_matrix(h_weights,dense_output_M,output_M*output_M);
-            cout<<"Hello from 1"<<endl;
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            //cout<<"Hello from 1"<<endl;
         }
+        
+        
         // Backprop for last layer
         dim3 gridsize_ll(1);
         dim3 blocksize_ll(dense_output_M * 1);
         backward_propagation_fc_lastlayer<<<gridsize_ll,blocksize_ll>>>(d_dense_output,d_train_label,d_delta_ll);
-        cout<<1<<endl;
+        
+        
         // Backprop for previous layers
         dim3 gridsize_dense_bp(output_M*output_M);
         dim3 blocksize_dense_bp(dense_output_M * 1);
         backward_propagation_fc<<<gridsize_dense_bp,blocksize_dense_bp>>>(d_output,d_delta_ll,d_delta_curr,d_weights);
         cudaMemcpy(h_delta_curr, d_delta_curr, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
-        cout<<2<<endl;        
+        
+        
         dim3 gridsize_wts_update(dense_output_M);
         dim3 blocksize_wts_update(output_M*output_M);
         weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
-        cout<<3<<endl;
-        cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
-        cout<<4<<endl;
+        
+
+        dim3 gridsize_dense_grad_input(1)
+        dim3 blocksize_dense_grad_input(dense_output_M);
+
+        input_grad<<<gridsize_dense_grad_input, blocksize_dense_grad_input>>>(d_dense_grad_input, d_dense_output);
+
+
+
+        //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         if (i == 0){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
-            cout<<"Hello from 2"<<endl;
-            check_matrix(h_weights,dense_output_M,output_M*output_M);
-            cout<<"weights from 2 yolooooooooo"<<endl;
+            //check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
+            //cout<<"Hello from 2"<<endl;
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            //cout<<"weights from 2 yolooooooooo"<<endl;
         }
         
         cudaFree(d_output);

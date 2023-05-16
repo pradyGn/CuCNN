@@ -4,13 +4,11 @@
 #include <cuda.h>
 #include <iostream>
 
-void transpose(float *matrix_t, float *matrix){
+__global__ void transpose(float *matrix_t, float *matrix){
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.x;
 
-    for(int n = 0; n<4*7; n++) {
-        int i = n/4;
-        int j = n%4;
-        matrix_t[n] = matrix[7*j + i];
-    }
+    matrix_t[i] = matrix[j + threadIdx.x * blockDim.x];
 }
 
 
@@ -46,13 +44,6 @@ int main(){
 
     check_matrix(input, 4, 7);
 
-    transpose(output, input);
-    check_matrix(output, 7, 4);
-
-
-    /*
-    check_matrix(input, 4, 7);
-
     cudaMalloc((void**)&d_input, sizeof(float) * (4 * 7));
     cudaMalloc((void**)&d_output, sizeof(float) * (7 * 4));
     
@@ -72,7 +63,7 @@ int main(){
 
     cudaFree(d_output);
     cudaFree(d_input);
-    */
+
     free(output);
     free(input);
 

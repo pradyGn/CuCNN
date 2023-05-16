@@ -12,6 +12,7 @@
 #include <math.h>
 #include <cmath>
 #include<limits>
+#include <sys/time.h>
 
 using namespace std;
 
@@ -65,8 +66,8 @@ int main(){
     //check_matrix(h_bias_dense, 1, dense_output_M);
     //check_matrix(h_weights, dense_output_M, (output_M * output_M));
 
-    Timer t;
-    t.tic();
+    struct timeval t1, t2;
+    gettimeofday(&t1, 0);
 
     for (int i = 0; i < 60000; i++){
 
@@ -412,12 +413,15 @@ int main(){
 
     }
 
-    double time = t.toc();
+    //double time = t.toc();
+    gettimeofday(&t2, 0);
+    double time = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000.0;
+
     double flops = filter_N * filter_N * output_M * 2 + (output_M * output_M) * dense_output_M * 5 + output_M * output_M * filter_N * 2; // TODO: calculate from m, n, k, NREPEATS, time
-    double flops_p_sec = (flops/time)*pow(10, -9);
+    double flops_p_sec = (flops/time);
     double bandwidth = 0; // TODO: calculate from m, n, k, NREPEATS, time
-    cout << "Total training time: " << time/pow(10, -9) << endl;
-    cout << "flops / sec: " << flops_p_sec << endl;
+    cout << "Total training time (ms): " << time << endl;
+    cout << "flops / ms: " << flops_p_sec << endl;
     //printf("%10ld %10f %10f %10f", p, time, flops, bandwidth);
 
 

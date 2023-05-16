@@ -5,8 +5,8 @@
 using namespace std;
 
 void transpose(float *input, float* output, int M, int N){
-    for (int i = 0; i < N; i++){
-        for (int j = 0; j < M; j++){
+    for (int i = 0; i < M; i++){
+        for (int j = 0; j < N; j++){
             output[i * M + j] = input[j * N + i];
         }
     }

@@ -2,6 +2,19 @@
 #include <stdlib.h>
 #include <cuda.h>
 
+const int N = 4;
+__global__ void forward_propagation_fc(float* input, float* weights, float* bias, float* output) {
+         int i = threadIdx.x;
+         float sum = 0.0f;
+         for(int j = 0; j < N; j++){
+         sum += bias[j] + weights[i*N + j] * input[j];
+        }
+        output[i] = sum;
+}
+
+int main()
+{
+     // Allocate memory for arrays
 
 #define N 4
 
@@ -45,6 +58,7 @@ int main(){
     float* weights = (float*)malloc(N*N * sizeof(float));
     float* output = (float*)malloc(N * sizeof(float));
     float* biases = (float*)malloc(N * sizeof(float));
+    // Initialize all arrays
     // Initialize the input and output arrays.
     for (int i = 0; i < N; i++) {
         input[i] = i;
@@ -53,6 +67,7 @@ int main(){
         output[i] = 0.0f;
         biases[i] = 0.0f;
     }
+    // Allocate CUDA Memory
 
     // Allocate the CUDA memory for the input and output arrays.
     float* d_input;
@@ -63,11 +78,18 @@ int main(){
     cudaMalloc(&d_output, N * sizeof(float));
     float* d_biases;
     cudaMalloc(&d_biases, N * sizeof(float));
+    // Copy the required parameters to device
     // Copy the input and output arrays to the CUDA device.
     cudaMemcpy(d_input, input, N * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_weights, weights, N*N * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_biases, biases, N * sizeof(float), cudaMemcpyHostToDevice);
     // Launch the kernel.
+    dim3 blocks(1);
+    dim3 threads(N);
+    forward_propagation_fc<<<blocks, threads>>>(d_input, d_weights, d_biases, d_output);
+    // Copy the output array back to the host.
+    cudaMemcpy(output, d_output, N * sizeof(float), cudaMemcpyDeviceToHost);
+    // Print input array
     dim3 gridsize(1);
     dim3 blocksize(N);
     //fully_connected_forward<<<blocks, threads>>>(d_input, d_weights, d_output, 1, N, N);
@@ -79,6 +101,7 @@ int main(){
         printf("%f ", input[i]);
     }
     printf("\n\n\n");
+    // Print weights
     for (int i = 0; i < N; i++) {
         for (int j = 0;j < N; j++){
         printf("%f ", weights[i*N + j]);
@@ -89,16 +112,20 @@ int main(){
         printf("%f ", output[i]);
     }
 
+    // Free CUDA memory.
     // Free the CUDA memory.
     cudaFree(d_input);
     cudaFree(d_weights);
     cudaFree(d_output);
     cudaFree(d_biases);
+    // Free host memory.
     // Free the host memory.
     free(input);
     free(weights);
     free(output);
     free(biases);
+    return 0;
+}
 
     return 0;
 

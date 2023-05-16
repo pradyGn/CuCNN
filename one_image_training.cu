@@ -125,7 +125,7 @@ int main(){
         //forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
         cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
-        forward_propogation_check(&h_output[784*i], h_weights)
+        forward_propogation_check(&h_output[784*i], h_weights);
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
 

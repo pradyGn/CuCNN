@@ -4,7 +4,6 @@
 #include "constants.h"
 #include "dense.h"
 #include "activation_fn.h"
-#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>

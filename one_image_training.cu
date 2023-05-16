@@ -372,7 +372,16 @@ int main(){
         dim3 blocksize_fup(filter_M*filter_M);
         weight_update<<<gridsize_fup, blocksize_fup>>>(d_filter_grad, d_filter);
 
+        dim3 gridsize_bup(1);
+        dim3 blocksize_bup(output_M*output_M);
+        weight_update<<<gridsize_bup, blocksize_bup>>>(d_dense_grad_input_act, d_bias_conv);
 
+
+        cudaMemcpy(h_filter, d_filter, sizeof(float) * (filter_M * filter_M), cudaMemcpyDeviceToHost);
+        cudaMemcpy(h_bias_conv, d_bias_conv, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+
+        check_matrix(h_filter,filter_M,filter_M);
+        check_matrix(h_bias_conv,output_M,output_M);
 
 
 

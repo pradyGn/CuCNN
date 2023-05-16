@@ -105,6 +105,17 @@ int main(){
         convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_train_image, d_output, d_bias_conv);
         cudaFree(d_train_image);
 
+        cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+        if (i == 0){
+            cout<<"Checking h_output_conv"<<endl;
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            //check_matrix(h_dense_output,1,dense_output_M);
+        }
+
+
         dim3 gridsize_sig(1);
         dim3 blocksize_sig(output_M*output_M);
         sigmoid_function<<<gridsize_sig, blocksize_sig>>>(d_output,d_output);

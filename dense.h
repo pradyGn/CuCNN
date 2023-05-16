@@ -46,6 +46,7 @@ __global__ void backward_propagation_fc(float* sigmoid_output,float* delta_next,
 
 __global__ void weight_update(float* delta_curr,float* weights)
 {
- int i = threadIdx.x;
+ //int i = threadIdx.x;
+ int i = blockIdx.x * blockDim.x  + threadIdx.x;
  weights[i] -= lr*delta_curr[i];
  }

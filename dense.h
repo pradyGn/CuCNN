@@ -5,7 +5,7 @@
 void initialize_dense_weights_and_bias(float* weights, float* bias){
 for (int i = 0; i < dense_output_M; i++) {
     for(int j = 0; j < output_N*output_N; j++) {
-        weights[i*dense_output_N + j] = 0.5f - float(rand()) / float(RAND_MAX);
+        weights[i*(output_M * output_M) + j] = 0.5f - float(rand()) / float(RAND_MAX);
         }
     
     bias[i] = 0.5f - float(rand()) / float(RAND_MAX);

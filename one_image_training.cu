@@ -280,17 +280,17 @@ int main(){
             //cout<<"Hello from 1"<<endl;
         }
 
-        cout<<"Yoloooooooo weights"<<endl;
-        check_matrix(h_weights, dense_output_M, (output_M * output_M));
+        //cout<<"Yoloooooooo weights"<<endl;
+        //check_matrix(h_weights, dense_output_M, (output_M * output_M));
 
-        cout<<"Transpose of weights"<<endl;
-        check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
+        //cout<<"Transpose of weights"<<endl;
+        //check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
 
         cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
         cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
 
         dim3 gridsize_dense_grad_mm(1);
-        dim3 blocksize_dense_grad_mm((output_M * output_M));
+        dim3 blocksize_dense_grad_mm((output_M*output_M));
 
         float *d_dense_grad_input_act;
         cudaMalloc((void**)&d_dense_grad_input_act, sizeof(float) * (output_M * output_M));

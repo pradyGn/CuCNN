@@ -63,7 +63,7 @@ __global__ void weight_update(float* delta_curr,float* weights)
          int i = threadIdx.x;
          float sum = 0.0f;
          for(int j = 0; j < dense_output_M; j++){
-         sum += weights[i*(output_M*output_M) + j] * input[j];
+         sum += weights[i*dense_output_M + j] * input[j];
         }
         output[i] = sum;
 }

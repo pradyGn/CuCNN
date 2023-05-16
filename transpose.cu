@@ -32,7 +32,7 @@ odata = (float*)malloc(7*4* sizeof(float));
 cudaMalloc((void **)&d_idata, 4 * 7 * sizeof(float));
 cudaMalloc((void **)&d_odata, 4 * 7 * sizeof(float));
 
-initialize_output(idata, 4,7);
+initialize_filter(idata, 4,7);
 check_matrix(idata,4,7);
 // Copy the input matrix to the device
 cudaMemcpy(d_idata, idata, width * height * sizeof(float), cudaMemcpyHostToDevice);
@@ -46,6 +46,9 @@ check_matrix(odata,7,4);
 // Free the device memory
 cudaFree(d_idata);
 cudaFree(d_odata);
+
+free(idata);
+free(odata);
 
 return 0;
 }

@@ -1,4 +1,5 @@
 #include "Mnist_test.h"
+#include "transpose.h"
 #include "convolution.h"
 #include "constants.h"
 #include "dense.h"
@@ -119,14 +120,6 @@ int main(){
         dim3 blocksize_sig_dense(dense_output_M * 1);
         sigmoid_function<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_dense_output,d_dense_output);
 
-
-        if (i == 0){
-            //check_matrix(&h_train_images[784*i], input_M, input_M);
-            //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //cout<<"Hello from 1"<<endl;
-        }
         
         
         // Backprop for last layer
@@ -152,6 +145,37 @@ int main(){
         dim3 blocksize_dense_grad_input(dense_output_M);
 
         input_grad<<<gridsize_dense_grad_input, blocksize_dense_grad_input>>>(d_dense_grad_input, d_dense_output);
+        float *h_weights_T, *d_weights_T;
+        h_weights_T = (float*)malloc(sizeof(float) * dense_output_M * (output_M * output_M));
+        cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+
+        transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
+
+        cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
+        cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
+
+        dim3 gridsize_dense_grad_mm(1);
+        dim3 blocksize_dense_grad_mm((output_M * output_M));
+
+        float *d_dense_grad_input_act;
+        cudaMalloc((void**)&d_dense_grad_input_act, sizeof(float) * (output_M * output_M));
+        matrix_mul<<<gridsize_dense_grad_mm, blocksize_dense_grad_mm>>>(d_dense_grad_input, d_weights_T, d_dense_grad_input_act);
+
+        float *h_dense_grad_input_act;
+        h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
+        cudaMemcpy(h_dense_grad_input_act, d_dense_grad_input_act, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+
+        if (i == 0){
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            check_matrix(h_dense_grad_input_act,output_M,output_M);
+            cout<<"Hello from 1"<<endl;
+        }
+
+
+
 
 
 

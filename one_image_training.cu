@@ -277,6 +277,7 @@ int main(){
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
             check_matrix(h_weights, dense_output_M, (output_M * output_M));
+            
             cout<<"Transpose of weights"<<endl;
             check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
             //cout<<"Hello from 1"<<endl;

@@ -8,7 +8,7 @@ __global__ void transpose(float *matrix_t, float *matrix){
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.x;
 
-    matrix_t[i%blockDim.x] = matrix[j + threadIdx.x * blockDim.x];
+    matrix_t[i] = matrix[threadIdx.x + j * blockDim.x];
 }
 
 

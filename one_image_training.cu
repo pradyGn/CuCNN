@@ -182,18 +182,18 @@ int main(){
         cudaMemcpy(d_denom, h_denom, sizeof(float), cudaMemcpyHostToDevice);
         softmax_denom<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output);
 
-        float *h_dense_output;
-        h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
-        cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
-        if (i == 0){
-            cout<<"Checking h_dense_output_conv after sigmoid"<<endl;
+        //float *h_dense_output;
+        //h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
+        //cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
+        //if (i == 0){
+        //    cout<<"Checking h_dense_output_conv after softmax"<<endl;
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            check_matrix(h_dense_output,1,dense_output_M);
+        //    check_matrix(h_dense_output,1,dense_output_M);
             //cout<<"Hello from 1"<<endl;
-        }
+        //}
 
 
         cudaMemcpy(h_denom, d_denom, sizeof(float), cudaMemcpyDeviceToHost);
@@ -203,6 +203,18 @@ int main(){
         }
 
         softmax<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output, d_dense_output);
+
+        cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
+        if (i == 0){
+            cout << h_max[0] << endl;
+            cout << h_min[0] << endl;
+            cout<<"Checking h_dense_output_conv after softmax"<<endl;
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            //check_matrix(h_dense_output,1,dense_output_M);
+        }
 
         
         

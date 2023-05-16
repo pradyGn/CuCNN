@@ -36,7 +36,7 @@ void forward_propogation_check(float *input, float *weights){
          sum += weights[j] * input[j];
          if (i == 3){
             cout << input[j] << endl;
-            cout << weights[i*output_N*output_N + j] << endl;
+            cout << weights[j] << endl;
          }
          
 

@@ -13,7 +13,9 @@ __global__ void sigmoid_function(float* input, float* output){
 __global__ void softmax_denom(float* denom, float* input){
     int i = threadIdx.x;
 
-    denom[0] += exp(input[i]);
+    for (int j = 0; j < dense_output_M; j++){
+        denom[0] += exp(input[j]);
+    }
 
 }
 

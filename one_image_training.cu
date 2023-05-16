@@ -67,7 +67,7 @@ int main(){
     //check_matrix(h_bias_dense, 1, dense_output_M);
     //check_matrix(h_weights, dense_output_M, (output_M * output_M));
 
-    for (int i = 0; i < 1; i++){
+    for (int i = 0; i < 60000; i++){
 
         initialize_output(&h_output[784*i], output_N, output_N);
         initialize_dense_output(&h_dense_output[10*i]);

@@ -370,7 +370,8 @@ int main(){
 
         dim3 gridsize_fup(1);
         dim3 blocksize_fup(filter_M*filter_M);
-        weight_update<<<gridsize_fup, blocksize_fup>>>>(d_filter_grad, d_filter);
+        weight_update<<<gridsize_fup, blocksize_fup>>>(d_filter_grad, d_filter);
+
 
 
 

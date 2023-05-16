@@ -74,7 +74,7 @@ int main(){
     struct timeval t1, t2;
     gettimeofday(&t1, 0);
 
-    for (int i = 0; i < 60000; i++){
+    for (int i = 0; i < 1; i++){
 
         initialize_output(&h_output[784*i], output_N, output_N);
         initialize_dense_output(&h_dense_output[10*i]);
@@ -118,27 +118,21 @@ int main(){
         cudaMemcpy(d_train_label, one_hot_label, sizeof(int) * dense_output_M, cudaMemcpyHostToDevice);
 
         
-        //dim3 gridsize(output_M);
-        //dim3 blocksize(output_M);
-         dim3 gridsize(1);
-         dim3 blocksize(1);
+        dim3 gridsize(output_M);
+        dim3 blocksize(output_M);
         convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_train_image, d_output, d_bias_conv);
         //cudaFree(d_train_image);
 
 
-        //dim3 gridsize_sig(1);
-        //dim3 blocksize_sig(output_M*output_M);
         dim3 gridsize_sig(1);
-        dim3 blocksize_sig(1);
+        dim3 blocksize_sig(output_M*output_M);
         sigmoid_function<<<gridsize_sig, blocksize_sig>>>(d_output,d_output);
 
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         
-        //dim3 gridsize_dense(1);
-        //dim3 blocksize_dense(dense_output_M);
         dim3 gridsize_dense(1);
-        dim3 blocksize_dense(1);
+        dim3 blocksize_dense(dense_output_M);
         forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
@@ -193,10 +187,8 @@ int main(){
         //sigmoid_function<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_dense_output,d_dense_output);
 
 
-        //dim3 gridsize_sig_dense(1);
-        //dim3 blocksize_sig_dense(dense_output_M * 1);
         dim3 gridsize_sig_dense(1);
-        dim3 blocksize_sig_dense(1);
+        dim3 blocksize_sig_dense(dense_output_M * 1);
         float *h_denom, *d_denom;
         h_denom = (float*)malloc(sizeof(float));
         h_denom[0] = 0;
@@ -232,10 +224,8 @@ int main(){
         softmax<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output, d_dense_output);
 
 
-        //dim3 gridsize_loss_dense(1);
-        //dim3 blocksize_loss_dense(dense_output_M);
         dim3 gridsize_loss_dense(1);
-        dim3 blocksize_loss_dense(1);
+        dim3 blocksize_loss_dense(dense_output_M);
         cross_entropy_loss<<<gridsize_loss_dense, blocksize_loss_dense>>>(d_dense_output, d_train_label, d_loss);
         
 
@@ -254,34 +244,27 @@ int main(){
         
         
         // Backprop for last layer
-        //dim3 gridsize_ll(1);
-        //dim3 blocksize_ll(dense_output_M * 1);
         dim3 gridsize_ll(1);
-        dim3 blocksize_ll(1);
+        dim3 blocksize_ll(dense_output_M * 1);
         backward_propagation_fc_lastlayer<<<gridsize_ll,blocksize_ll>>>(d_dense_output,d_train_label,d_delta_ll);
         
         
         // Backprop for previous layers
-        //dim3 gridsize_dense_bp(output_M*output_M);
-        //dim3 blocksize_dense_bp(dense_output_M * 1);
-        dim3 gridsize_dense_bp(1);
-        dim3 blocksize_dense_bp(1);
+        dim3 gridsize_dense_bp(output_M*output_M);
+        dim3 blocksize_dense_bp(dense_output_M * 1);
         backward_propagation_fc<<<gridsize_dense_bp,blocksize_dense_bp>>>(d_output,d_delta_ll,d_delta_curr,d_weights);
         cudaMemcpy(h_delta_curr, d_delta_curr, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
         
         
-        //dim3 gridsize_wts_update(dense_output_M);
-        //dim3 blocksize_wts_update(output_M*output_M);
-        dim3 gridsize_wts_update(1);
-        dim3 blocksize_wts_update(1);
+        dim3 gridsize_wts_update(dense_output_M);
+        dim3 blocksize_wts_update(output_M*output_M);
         weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
         
 
-        //dim3 gridsize_dense_grad_input(1);
-        //dim3 blocksize_dense_grad_input(dense_output_M);
         dim3 gridsize_dense_grad_input(1);
-        dim3 blocksize_dense_grad_input(1);
+        dim3 blocksize_dense_grad_input(dense_output_M);
+
         input_grad<<<gridsize_dense_grad_input, blocksize_dense_grad_input>>>(d_dense_grad_input, d_dense_output);
 
 
@@ -331,10 +314,8 @@ int main(){
 
 
 
-        //dim3 gridsize_dense_grad_mm(1);
-        //dim3 blocksize_dense_grad_mm((output_M*output_M));
         dim3 gridsize_dense_grad_mm(1);
-        dim3 blocksize_dense_grad_mm(1);
+        dim3 blocksize_dense_grad_mm((output_M*output_M));
         float *d_dense_grad_input_act;
         cudaMalloc((void**)&d_dense_grad_input_act, sizeof(float) * (output_M * output_M));
         matrix_mul<<<gridsize_dense_grad_mm, blocksize_dense_grad_mm>>>(d_dense_grad_input, d_weights_T, d_dense_grad_input_act);
@@ -374,10 +355,8 @@ int main(){
         //}
 
 
-        //dim3 gridsize_fg(filter_M);
-        //dim3 blocksize_fg(filter_M);
-        dim3 gridsize_fg(1);
-        dim3 blocksize_fg(1);
+        dim3 gridsize_fg(filter_M);
+        dim3 blocksize_fg(filter_M);
 
         float *d_filter_grad; //h_filter_grad
         cudaMalloc((void**)&d_filter_grad, sizeof(float) * (filter_M * filter_M));
@@ -398,10 +377,8 @@ int main(){
         //}
 
 
-        //dim3 gridsize_fup(1);
-        //dim3 blocksize_fup(filter_M*filter_M);
         dim3 gridsize_fup(1);
-        dim3 blocksize_fup(1);
+        dim3 blocksize_fup(filter_M*filter_M);
         weight_update<<<gridsize_fup, blocksize_fup>>>(d_filter_grad, d_filter);
 
         dim3 gridsize_bup(1);

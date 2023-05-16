@@ -5,6 +5,9 @@
         "chrono": "cpp",
         "limits": "cpp",
         "ratio": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "cmath": "cpp",
+        "__locale": "cpp",
+        "complex": "cpp"
     }
 }

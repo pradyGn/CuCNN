@@ -42,7 +42,7 @@ int main(){
     float *input = (float*)malloc(sizeof(float) * 4 * 7);
     initialize_output(input, 4, 7);
 
-    check_matrix(input, 4, 7);
+    check_matrix(input, 7, 4);
 
     cudaMalloc((void**)&d_input, sizeof(float) * (4 * 7));
     cudaMalloc((void**)&d_output, sizeof(float) * (7 * 4));

@@ -416,7 +416,7 @@ int main(){
     gettimeofday(&t2, 0);
     double time = (1000000.0*(t2.tv_sec-t1.tv_sec) + t2.tv_usec-t1.tv_usec)/1000.0;
 
-    double flops = filter_N * filter_N * output_M * 2 + (output_M * output_M) * dense_output_M * 5 + output_M * output_M * filter_N * 2; // TODO: calculate from m, n, k, NREPEATS, time
+    double flops = 60000*(filter_N * filter_N * output_M * 2 + (output_M * output_M) * dense_output_M * 5 + output_M * output_M * filter_N * 2); // TODO: calculate from m, n, k, NREPEATS, time
     double flops_p_sec = (flops/time);
     double bandwidth = 0; // TODO: calculate from m, n, k, NREPEATS, time
     cout << "Total training time (ms): " << time << endl;

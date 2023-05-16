@@ -22,7 +22,8 @@ __global__ void forward_propagation_fc(float* input, float* weights, float* bias
          int i = threadIdx.x;
          float sum = 0.0f;
          for(int j = 0; j < output_N*output_N; j++){
-         sum += bias[i] + weights[i*dense_output_M + j] * input[j];
+         //sum += bias[i] + weights[i*dense_output_M + j] * input[j];
+         sum += bias[i] + weights[i*output_N*output_N + j] * input[j];
         }
         output[i] = sum;
 }
@@ -63,7 +64,7 @@ __global__ void matrix_mul(float* input, float* weights, float* output) {
          int i = threadIdx.x;
         float sum = 0.0f;
         for(int j = 0; j < dense_output_M; j++){
-        sum += weights[i*(output_M*output_M) + j] * input[j];
+        sum += weights[i*dense_output_M + j] * input[j];
         }
         output[i] = sum;
          

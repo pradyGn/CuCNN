@@ -74,8 +74,8 @@ int main(){
 
         // One hot labels
         int* one_hot_label = (int*)malloc(sizeof(int) * dense_output_M);
-        for (int i = 0; i < dense_output_M; i++) {
-            one_hot_label[i] = 0;
+        for (int j = 0; j < dense_output_M; j++) {
+            one_hot_label[j] = 0;
         }
         one_hot_label[h_train_labels[i]] = 1;
 
@@ -102,9 +102,9 @@ int main(){
         dim3 blocksize_dense(dense_output_M);
         forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
 
-        dim3 gridsize_sig(1);
-        dim3 blocksize_sig(dense_output_M * 1);
-        sigmoid_function<<<gridsize_sig, blocksize_sig>>>(d_dense_output,d_dense_output);
+        dim3 gridsize_sig_dense(1);
+        dim3 blocksize_sig_dense(dense_output_M * 1);
+        sigmoid_function<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_dense_output,d_dense_output);
 
 
         if (i == 1){
@@ -120,9 +120,9 @@ int main(){
         backward_propagation_fc_lastlayer<<<gridsize_ll,blocksize_ll>>>(d_dense_output,d_train_label,d_delta_ll);
 
         // Backprop for previous layers
-        dim3 gridsize_ll(output_M*output_M);
-        dim3 blocksize_ll(dense_output_M * 1);
-        backward_propagation_fc(d_output,d_delta_ll,d_weights);
+        dim3 gridsize_dense_bp(output_M*output_M);
+        dim3 blocksize_dense_bp(dense_output_M * 1);
+        backward_propagation_fc<<<gridsize_dense_bp,blocksize_dense_bp>>>(d_output,d_delta_ll,d_weights);
         cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
 
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);

@@ -9,12 +9,15 @@ using namespace std;
 
 __global__ void transpose(float *matrix_t, float *matrix){
     int i = blockIdx.x * blockDim.x + threadIdx.x;
-    int j = blockIdx.x;
-
     matrix_t[i] = matrix[(blockDim.x * (i % gridDim.x) + (i / gridDim.x))];
 }
 
-
+void transposeNaive(float *Array, int m, int n)
+{
+  for(int i = 0; i < m; ++i)
+    for(int j = i+1; j < n; ++j)
+        std::swap(Array[n*i + j], Array[n*j + i]);
+}
 
 
 
@@ -43,12 +46,20 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    float *d_output, *d_input;
-    float *output = (float*)malloc(sizeof(float) * 4 * 7);
+    //float *d_output, *d_input;
+    //float *output = (float*)malloc(sizeof(float) * 4 * 7);
     float *input = (float*)malloc(sizeof(float) * 4 * 7);
     initialize_output(input, 4, 7);
-
     check_matrix(input, 4, 7);
+
+    transposeNaive(input, 4, 7);
+
+    check_matrix(input, 7, 4);
+
+
+
+/*
+    
 
     cudaMalloc((void**)&d_input, sizeof(float) * (4 * 7));
     cudaMalloc((void**)&d_output, sizeof(float) * (7 * 4));
@@ -60,7 +71,7 @@ int main(){
     dim3 griddim(4);
     dim3 blockdim(7);
 
-    transpose<<<griddim, blockdim>>>(d_output, d_input);
+    transposeNaive<<<griddim, blockdim>>>(d_output, d_input);
 
 
     cudaMemcpy(output, d_output, sizeof(float) * (7 * 4), cudaMemcpyDeviceToHost);
@@ -69,7 +80,7 @@ int main(){
 
     cudaFree(d_output);
     cudaFree(d_input);
-
+*/
     free(output);
     free(input);
 

@@ -271,17 +271,20 @@ int main(){
         transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
 
         if (i == 0){
-            cout<<"weights"<<endl;
+            //cout<<"weights"<<endl;
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            check_matrix(h_weights, dense_output_M, (output_M * output_M));
+            //check_matrix(h_weights, dense_output_M, (output_M * output_M));
             //cout<<"Hello from 1"<<endl;
         }
 
-        cout<<"Transpose of weights"<<endl;
-        check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
+        cout<<"weights"<<endl;
+        check_matrix(h_weights, dense_output_M, (output_M * output_M));
+
+        //cout<<"Transpose of weights"<<endl;
+        //check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
 
         cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
         cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);

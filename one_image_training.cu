@@ -276,7 +276,7 @@ int main(){
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            check_matrix(h_weights_T, dense_output_M, (output_M * output_M));
+            check_matrix(h_weights, dense_output_M, (output_M * output_M));
             //cout<<"Hello from 1"<<endl;
         }
 

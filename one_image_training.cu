@@ -2,6 +2,7 @@
 #include "convolution.h"
 #include "constants.h"
 #include "dense.h"
+#include "activation_fn.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
@@ -11,9 +12,9 @@ using namespace std;
 int main(){
 
     float* h_train_images = (float*)malloc(sizeof(float) * 60000 * 784);
-    float* h_train_labels = (float*)malloc(sizeof(float) * 60000);
+    int* h_train_labels = (int*)malloc(sizeof(int) * 60000);
     float* h_test_images = (float*)malloc(sizeof(float) * 10000 * 784);
-    float* h_test_labels = (float*)malloc(sizeof(float) * 10000);
+    int* h_test_labels = (int*)malloc(sizeof(int) * 10000);
 
     float  *h_output, *d_filter, *h_filter, *h_bias_conv, *d_bias_conv, *d_bias_dense, *h_bias_dense, *h_weights, *d_weights;
 
@@ -56,48 +57,90 @@ int main(){
     for (int i = 0; i < 2; i++){
 
         initialize_output(&h_output[784*i], output_N, output_N);
-        
         initialize_dense_output(&h_dense_output[10*i]);
         
-        float *d_train_image;
+        int *d_train_label;
+        float *d_train_image, *h_delta_ll, *d_delta_ll;
         float *d_dense_output, *d_output;
 
+        h_delta_ll = (float*)malloc(sizeof(float) * dense_output_M*1);
+        initialize_dense_output(h_delta_ll);
+
+        cudaMalloc((void**)&d_delta_ll, sizeof(float) * dense_output_M*1);
         cudaMalloc((void**)&d_output, sizeof(float) * (output_N * output_N));
         cudaMalloc((void**)&d_train_image, sizeof(float) * 784);
         cudaMalloc((void**)&d_dense_output, sizeof(float) * dense_output_M);
+        cudaMalloc((void**)&d_train_label, sizeof(int) * dense_output_M);
 
+        // One hot labels
+        int* one_hot_label = (int*)malloc(sizeof(int) * dense_output_M);
+        for (int i = 0; i < dense_output_M; i++) {
+            one_hot_label[i] = 0;
+        }
+        one_hot_label[h_train_labels[i]] = 1;
 
+        cudaMemcpy(d_delta_ll, h_delta_ll, sizeof(float) * (dense_output_M * 1), cudaMemcpyHostToDevice);       
         cudaMemcpy(d_output, &h_output[784*i], sizeof(float) * (output_N * output_N), cudaMemcpyHostToDevice);
         cudaMemcpy(d_train_image, &h_train_images[784*i], sizeof(float) * 784, cudaMemcpyHostToDevice);
-
         cudaMemcpy(d_dense_output, &h_dense_output[10*i], sizeof(float) * (dense_output_M * 1), cudaMemcpyHostToDevice);
+        cudaMemcpy(d_train_label, one_hot_label, sizeof(int) * dense_output_M, cudaMemcpyHostToDevice);
 
         
         dim3 gridsize(output_M);
         dim3 blocksize(output_M);
-
         convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_train_image, d_output, d_bias_conv);
+        cudaFree(d_train_image);
 
+        dim3 gridsize_sig(1);
+        dim3 blocksize_sig(output_M*output_M);
+        sigmoid_function<<<gridsize_sig, blocksize_sig>>>(d_output,d_output);
+
+        //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         
         dim3 gridsize_dense(1);
         dim3 blocksize_dense(dense_output_M);
-
         forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
-        cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
-        cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
+
+        dim3 gridsize_sig(1);
+        dim3 blocksize_sig(dense_output_M * 1);
+        sigmoid_function<<<gridsize_sig, blocksize_sig>>>(d_dense_output,d_dense_output);
+
+
+        if (i == 1){
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            check_matrix(h_weights,dense_output_M,output_M*output_M);
+        
+        }
+        // Backprop for last layer
+        dim3 gridsize_ll(1);
+        dim3 blocksize_ll(dense_output_M * 1);
+        backward_propagation_fc_lastlayer<<<gridsize_ll,blocksize_ll>>>(d_dense_output,d_train_label,d_delta_ll);
+
+        // Backprop for previous layers
+        dim3 gridsize_ll(output_M*output_M);
+        dim3 blocksize_ll(dense_output_M * 1);
+        backward_propagation_fc(d_output,d_delta_ll,d_weights);
+        cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+
+        //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
         
         if (i == 1){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
-            check_matrix(&h_output[784*i], output_M, output_M);
-            check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            check_matrix(h_weights,dense_output_M,output_M*output_M);
+        
         }
-        cout<<1<<endl;
-
+        
         cudaFree(d_output);
+        cudaFree(d_train_label);
         cudaFree(d_dense_output);
-        cudaFree(d_train_image);
-
+        cudaFree(d_delta_ll);
+        free(h_delta_ll);
+        free(one_hot_label);
     }
     cudaFree(d_filter);
     cudaFree(d_bias_conv);

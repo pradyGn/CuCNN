@@ -432,6 +432,7 @@ int main(){
     double flops_p_sec = (flops/time);
     double bandwidth = 0; // TODO: calculate from m, n, k, NREPEATS, time
     cout << "Total training time (ms): " << time << endl;
+    cout << "Total Flops: " << flops << endl;
     cout << "flops / ms: " << flops_p_sec << endl;
     //printf("%10ld %10f %10f %10f", p, time, flops, bandwidth);
 

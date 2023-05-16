@@ -76,13 +76,13 @@ void get_image_data(float* train_images, float* train_labels, float* test_images
   read_mnist_dataset(train_images, train_labels, test_images, test_labels);
 
   // Print out the first image.
-  for (int i = 0; i < 784; i++) {
-    printf("%f ", train_images[i]);
-  }
-  printf("\n");
+  //for (int i = 0; i < 784; i++) {
+  //  printf("%f ", train_images[i]);
+  //}
+  //printf("\n");
 
   // Print out the first label.
-  printf("%f\n", train_labels[0]);
+  //printf("%f\n", train_labels[0]);
 
   // Free the memory.
   //free(train_images);

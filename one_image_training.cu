@@ -65,7 +65,9 @@ int main(){
     //check_matrix(h_bias_dense, 1, dense_output_M);
     //check_matrix(h_weights, dense_output_M, (output_M * output_M));
 
-    float *h_loss, *d_loss;
+    float *h_loss, *d_loss, *d_loss_arr, *h_loss_arr;
+    h_loss_arr = (float*)malloc(sizeof(float) * 100);
+    cudaMalloc((void**)&d_loss_arr, sizeof(float)* 100);
     h_loss = (float*)malloc(sizeof(float));
     h_loss[0] = 0;
     cudaMalloc((void**)&d_loss, sizeof(float));
@@ -74,7 +76,7 @@ int main(){
     struct timeval t1, t2;
     gettimeofday(&t1, 0);
 
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < 100; i++){
 
         initialize_output(&h_output[784*i], output_N, output_N);
         initialize_dense_output(&h_dense_output[10*i]);
@@ -226,7 +228,7 @@ int main(){
 
         dim3 gridsize_loss_dense(1);
         dim3 blocksize_loss_dense(dense_output_M);
-        cross_entropy_loss<<<gridsize_loss_dense, blocksize_loss_dense>>>(d_dense_output, d_train_label, d_loss);
+        cross_entropy_loss<<<gridsize_loss_dense, blocksize_loss_dense>>>(d_dense_output, d_train_label, d_loss, d_loss_arr);
         
 
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
@@ -395,7 +397,8 @@ int main(){
 
 
 
-
+        cudaMemcpy(h_loss_arr, d_loss_arr, sizeof(float), cudaMemcpyDeviceToHost);
+        check_matrix(h_loss_arr,1,100);
         
         cudaFree(d_output);
         cudaFree(d_train_image);
@@ -440,6 +443,8 @@ int main(){
     cudaMemcpy(h_loss, d_loss, sizeof(float), cudaMemcpyDeviceToHost);
 
     cout << "Average negative log train loss: " << h_loss[0]/60000 << endl;
+
+    
 
 
 

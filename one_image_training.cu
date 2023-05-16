@@ -120,15 +120,6 @@ int main(){
         dim3 blocksize_sig_dense(dense_output_M * 1);
         //sigmoid_function<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_dense_output,d_dense_output);
 
-        float *h_denom, *d_denom;
-        h_denom = (float*)malloc(sizeof(float));
-        h_denom[0] = 0;
-        cudaMalloc((void**)&d_denom, sizeof(float));
-        cudaMemcpy(d_denom, h_denom, sizeof(float), cudaMemcpyHostToDevice);
-        softmax_denom<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output);
-
-        softmax<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output, d_dense_output);
-
         float *h_dense_output;
         h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
         cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
@@ -140,6 +131,15 @@ int main(){
             check_matrix(h_dense_output,1,dense_output_M);
             cout<<"Hello from 1"<<endl;
         }
+
+        float *h_denom, *d_denom;
+        h_denom = (float*)malloc(sizeof(float));
+        h_denom[0] = 0;
+        cudaMalloc((void**)&d_denom, sizeof(float));
+        cudaMemcpy(d_denom, h_denom, sizeof(float), cudaMemcpyHostToDevice);
+        softmax_denom<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output);
+
+        softmax<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output, d_dense_output);
 
         
         

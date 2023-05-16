@@ -159,6 +159,18 @@ int main(){
             cout<<"Hello from 1"<<endl;
         }
 
+        float *h_dense_output;
+        h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
+        cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
+        if (i == 0){
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            check_matrix(h_dense_output,1,dense_output_M);
+            cout<<"Hello from 1"<<endl;
+        }
+
 
 
 

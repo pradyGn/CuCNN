@@ -118,13 +118,12 @@ int main(){
         dim3 gridsize_ll(1);
         dim3 blocksize_ll(dense_output_M * 1);
         backward_propagation_fc_lastlayer<<<gridsize_ll,blocksize_ll>>>(d_dense_output,d_train_label,d_delta_ll);
-
+        cout<<1<<endl;
         // Backprop for previous layers
         dim3 gridsize_dense_bp(output_M*output_M);
         dim3 blocksize_dense_bp(dense_output_M * 1);
         backward_propagation_fc<<<gridsize_dense_bp,blocksize_dense_bp>>>(d_output,d_delta_ll,d_weights);
         cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
-
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
         
         if (i == 1){

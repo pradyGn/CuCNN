@@ -130,24 +130,18 @@ int main(){
         cout<<2<<endl;        
         dim3 gridsize_wts_update(dense_output_M);
         dim3 blocksize_wts_update(output_M*output_M);
-
-        if (i == 1){
-            check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
-            cout<<"Hello from 2"<<endl;
-        }
-
-        //weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
+        weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
         cout<<3<<endl;
-        //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+        cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         cout<<4<<endl;
         if (i == 1){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
-            cout<<"Hello from 3"<<endl;
-            //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //cout<<"weights from 2 yolooooooooo"<<endl;
+            cout<<"Hello from 2"<<endl;
+            check_matrix(h_weights,dense_output_M,output_M*output_M);
+            cout<<"weights from 2 yolooooooooo"<<endl;
         }
         
         cudaFree(d_output);

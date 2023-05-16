@@ -334,9 +334,14 @@ int main(){
         cudaFree(d_dense_output);
         cudaFree(d_delta_ll);
         cudaFree(d_delta_curr);
+        cudaFree(d_dense_grad_input_act);
+        cudaFree(d_weights_T);
         free(h_delta_ll);
         free(one_hot_label);
         free(h_delta_curr);
+        free(h_dense_grad_input_act);
+        free(h_weights_T);
+
     }
     cudaFree(d_filter);
     cudaFree(d_bias_conv);

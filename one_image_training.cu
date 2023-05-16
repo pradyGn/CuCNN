@@ -182,6 +182,11 @@ int main(){
         cudaMemcpy(d_denom, h_denom, sizeof(float), cudaMemcpyHostToDevice);
         softmax_denom<<<gridsize_sig_dense, blocksize_sig_dense>>>(d_denom, d_dense_output);
 
+        cudaMemcpy(h_denom, d_denom, sizeof(float), cudaMemcpyDeviceToHost);
+        cout << h_denom[0] << endl;
+
+
+
         //float *h_dense_output;
         //h_dense_output = (float*)malloc(sizeof(float) * (dense_output_M));
         //cudaMemcpy(h_dense_output, d_dense_output, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);

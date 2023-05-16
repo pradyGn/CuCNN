@@ -44,6 +44,8 @@ int main(){
     float *input = (float*)malloc(sizeof(float) * 4 * 7);
     initialize_output(input, 4, 7);
 
+    check_matrix(input, 7, 4);
+
     transpose(output, input);
     check_matrix(output, 7, 4);
 

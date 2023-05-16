@@ -10,6 +10,7 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
+#include<limits>
 
 const float MAXX = INFINITY;
 const float MINN = -INFINITY;
@@ -139,8 +140,8 @@ int main(){
         float *h_min, *h_max, *d_max, *d_min;
         h_min = (float*)malloc(sizeof(float));
         h_max = (float*)malloc(sizeof(float));
-        h_min[0] = MINN;
-        h_max[0] = MAXX;
+        h_min[0] = -1*(numeric_limits<float>::infinity());
+        h_max[0] = numeric_limits<float>::infinity();
 
         cudaMalloc((void**)&d_max, sizeof(float));
         cudaMalloc((void**)&d_min, sizeof(float));

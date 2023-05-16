@@ -128,8 +128,8 @@ int main(){
         cudaMemcpy(h_delta_curr, d_delta_curr, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
         cout<<2<<endl;        
-        dim3 gridsize_wts_update(output_M*output_M);
-        dim3 blocksize_wts_update(dense_output_M);
+        dim3 gridsize_wts_update(dense_output_M);
+        dim3 blocksize_wts_update(output_M*output_M);
         weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
         cout<<3<<endl;
         //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);

@@ -226,7 +226,7 @@ int main(){
 
         dim3 gridsize_loss_dense(1);
         dim3 blocksize_loss_dense(dense_output_M);
-        cross_entropy_loss<<<gridsize_loss_dense, blocksize_loss_dense>>>(d_dense_output, d_train_label, d_loss)
+        cross_entropy_loss<<<gridsize_loss_dense, blocksize_loss_dense>>>(d_dense_output, d_train_label, d_loss);
         
 
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);

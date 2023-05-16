@@ -28,6 +28,22 @@ __global__ void forward_propagation_fc(float* input, float* weights, float* bias
         output[i] = sum;
 }
 
+void forward_propogation_check(float *input, float *weights){
+    for (int i = 0; i < dense_output_M; i++){
+        float sum = 0.0f;
+        for(int j = 0; j < output_N*output_N; j++){
+         //sum += bias[i] + weights[i*dense_output_M + j] * input[j];
+         sum += bias[i] + weights[i*output_N*output_N + j] * input[j];
+         if (i == 3){
+            cout << input[j] << endl;
+            cout << weights[i*output_N*output_N + j] << endl;
+         }
+         
+
+        }
+    }
+}
+
 __global__ void backward_propagation_fc_lastlayer(float* sigmoid_output,int* labels,float* delta)
 {
 int i = threadIdx.x;

@@ -393,12 +393,6 @@ int main(){
 
         //check_matrix(h_filter,filter_M,filter_M);
         //check_matrix(h_bias_conv,output_M,output_M);
-
-
-
-
-        cudaMemcpy(h_loss_arr, d_loss_arr, sizeof(float), cudaMemcpyDeviceToHost);
-        check_matrix(h_loss_arr,1,100);
         
         cudaFree(d_output);
         cudaFree(d_train_image);
@@ -441,6 +435,9 @@ int main(){
 
 
     cudaMemcpy(h_loss, d_loss, sizeof(float), cudaMemcpyDeviceToHost);
+
+    cudaMemcpy(h_loss_arr, d_loss_arr, sizeof(float), cudaMemcpyDeviceToHost);
+    check_matrix(h_loss_arr,1,100);
 
     cout << "Average negative log train loss: " << h_loss[0]/60000 << endl;
 

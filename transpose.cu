@@ -8,7 +8,7 @@ __global__ void transpose(float *matrix_t, float *matrix){
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.x;
 
-    matrix_t[i] = src[blockIdx.x + threadIdx.x * blockDim.x];
+    matrix_t[i] = matrix[j + threadIdx.x * blockDim.x];
 }
 
 
@@ -37,7 +37,7 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    float *d_output;
+    float *d_output, *d_inpu;
     float *output = (float*)malloc(sizeof(float) * 4 * 7);
     float *input = (float*)malloc(sizeof(float) * 4 * 7);
     initialize_output(input, 4, 7);
@@ -57,7 +57,7 @@ int main(){
     transpose<<<griddim, blockdim>>>(d_output, d_input);
 
 
-    cudaMemcpy(output, d_output, sizeof(float) * (7 * 4), cudaMemcpyDevideToHost);
+    cudaMemcpy(output, d_output, sizeof(float) * (7 * 4), cudaMemcpyDeviceToHost);
 
     check_matrix(output, 7, 4);
 

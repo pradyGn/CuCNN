@@ -17,8 +17,6 @@ using namespace std;
 
 int main(){
 
-
-
     float* h_train_images = (float*)malloc(sizeof(float) * 60000 * 784);
     int* h_train_labels = (int*)malloc(sizeof(int) * 60000);
     float* h_test_images = (float*)malloc(sizeof(float) * 10000 * 784);
@@ -273,17 +271,12 @@ int main(){
 
 
 
-        float *d_weights_T;//, *h_weights_T;
-        //h_weights_T = (float*)malloc(sizeof(float) * dense_output_M * (output_M * output_M));
-        //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+        float *h_weights_T, *d_weights_T;
+        h_weights_T = (float*)malloc(sizeof(float) * dense_output_M * (output_M * output_M));
+        cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         
 
-        //transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
-
-        cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
-        dim3 gridsize_tp(1);
-        dim3 blocksize_tp(output_M * output_M);
-        transpose_cuda<<<gridsize_tp, blocksize_tp>>>(d_weights, d_weights_T);
+        transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
 
         //if (i == 0){
         //    cout<<"weights"<<endl;
@@ -301,8 +294,8 @@ int main(){
         //cout<<"Transpose of weights"<<endl;
         //check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
 
-        //cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
-        //cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
+        cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
+        cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
 
 
 
@@ -406,7 +399,7 @@ int main(){
         free(h_delta_curr);
         //free(h_dense_grad_input_act);
         //free(h_dense_grad_input);
-        //free(h_weights_T);
+        free(h_weights_T);
         cudaFree(d_min);
         cudaFree(d_max);
         free(h_max);

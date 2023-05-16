@@ -256,7 +256,7 @@ int main(){
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            check_matrix(h_dense_grad_input,1,dense_output_M);
+            check_matrix(h_dense_grad_input, 1, dense_output_M);
             cout<<"Hello from 1"<<endl;
         }
 
@@ -336,10 +336,12 @@ int main(){
         cudaFree(d_delta_curr);
         cudaFree(d_dense_grad_input_act);
         cudaFree(d_weights_T);
+        cudaFree(d_dense_grad_input);
         free(h_delta_ll);
         free(one_hot_label);
         free(h_delta_curr);
         free(h_dense_grad_input_act);
+        free(h_dense_grad_input);
         free(h_weights_T);
 
     }

@@ -18,17 +18,17 @@ __global__ void convolutional_layer2D (float *filter, float *input, float *outpu
     for (int m = 0; m < filter_M; m++){
         for (int n = 0; n < filter_M; n++){
 
-            sum += filter[m * filter_M + n] * input[input_pos + n + m*(input_N)] + bias[m * filter_M + n];
+            sum += filter[m * filter_M + n] * input[input_pos + n + m*(input_N)]; //+ bias[m * filter_M + n];
 
         }
     }
     
     int output_pos = i + (j*output_N);
-    output[output_pos] = sum;
+    output[output_pos] = sum + bias[output_pos];
 
 }
 
-__global__ void filter_grad_func (float *filter, float *input, float *output, float *bias)
+__global__ void filter_grad_func (float *filter, float *input, float *output)
 {
     int i = threadIdx.x;
     int j = blockIdx.x;
@@ -40,7 +40,7 @@ __global__ void filter_grad_func (float *filter, float *input, float *output, fl
     for (int m = 0; m < output_M; m++){
         for (int n = 0; n < output_M; n++){
 
-            sum += filter[m * output_M + n] * input[input_pos + n + m*(input_N)] + bias[m * output_M + n];
+            sum += filter[m * output_M + n] * input[input_pos + n + m*(input_N)];
 
         }
     }

@@ -36,10 +36,14 @@ int main(){
     h_dense_output = (float*)malloc(sizeof(float) * 60000 * (dense_output_M * 1));
 
     // bias initization and allocation
-    h_bias_conv = (float*)malloc(sizeof(float) * (filter_M * filter_M));
-    initialize_filter(h_bias_conv, filter_M, filter_M);
-    cudaMalloc((void**)&d_bias_conv, sizeof(float) * (filter_M * filter_M));
-    cudaMemcpy(d_bias_conv, h_bias_conv, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
+    h_bias_conv = (float*)malloc(sizeof(float) * (output_M * output_M));
+    initialize_filter(h_bias_conv, output_M, output_M);
+    cudaMalloc((void**)&d_bias_conv, sizeof(float) * (output_M * output_M));
+    cudaMemcpy(d_bias_conv, h_bias_conv, sizeof(float) * (output_M * output_M), cudaMemcpyHostToDevice);
+    //h_bias_conv = (float*)malloc(sizeof(float) * (filter_M * filter_M));
+    //initialize_filter(h_bias_conv, filter_M, filter_M);
+    //cudaMalloc((void**)&d_bias_conv, sizeof(float) * (filter_M * filter_M));
+    //cudaMemcpy(d_bias_conv, h_bias_conv, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
     //check_matrix(h_bias_conv, filter_M, filter_M);
 
 
@@ -341,15 +345,15 @@ int main(){
         dim3 gridsize_fg(filter_M);
         dim3 blocksize_fg(filter_M);
 
-        float *h_filter_grad, *d_filter_grad, *h_zeros_matrix, *d_zeros_matrix;
+        float *h_filter_grad, *d_filter_grad;// *h_zeros_matrix *d_zeros_matrix;
         cudaMalloc((void**)&d_filter_grad, sizeof(float) * (filter_M * filter_M));
 
-        h_zeros_matrix = (float*)malloc(sizeof(float) * (filter_M * filter_M));
-        initialize_filter_grad(h_zeros_matrix);
-        cudaMalloc((void**)&d_zeros_matrix, sizeof(float) * (filter_M * filter_M));
-        cudaMemcpy(d_zeros_matrix, h_zeros_matrix, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
+        //h_zeros_matrix = (float*)malloc(sizeof(float) * (filter_M * filter_M));
+        //initialize_filter_grad(h_zeros_matrix);
+        //cudaMalloc((void**)&d_zeros_matrix, sizeof(float) * (filter_M * filter_M));
+        //cudaMemcpy(d_zeros_matrix, h_zeros_matrix, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
 
-        filter_grad_func <<<gridsize_fg, blocksize_fg>>>(d_dense_grad_input_act, d_train_image, d_filter_grad, d_zeros_matrix);
+        filter_grad_func <<<gridsize_fg, blocksize_fg>>>(d_dense_grad_input_act, d_train_image, d_filter_grad);
 
         h_filter_grad = (float*)malloc(sizeof(float) * (filter_M * filter_M));
         cudaMemcpy(h_filter_grad, d_filter_grad, sizeof(float) * (filter_M * filter_M), cudaMemcpyDeviceToHost);
@@ -362,6 +366,11 @@ int main(){
             check_matrix(h_filter_grad,filter_M,filter_M);
             //cout<<"weights from 2 yolooooooooo"<<endl;
         }
+
+
+        dim3 gridsize_fup(1);
+        dim3 blocksize_fup(filter_M*filter_M);
+        weight_update<<<gridsize_fup, blocksize_fup>>>>(d_filter_grad, d_filter);
 
 
 

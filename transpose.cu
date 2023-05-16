@@ -37,7 +37,7 @@ void check_matrix(float *matrix, int matrix_M, int matrix_N){
 
 int main(){
 
-    float *d_output, *d_inpu;
+    float *d_output, *d_input;
     float *output = (float*)malloc(sizeof(float) * 4 * 7);
     float *input = (float*)malloc(sizeof(float) * 4 * 7);
     initialize_output(input, 4, 7);

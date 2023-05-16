@@ -74,7 +74,7 @@ int main(){
     struct timeval t1, t2;
     gettimeofday(&t1, 0);
 
-    for (int i = 0; i < 20000; i++){
+    for (int i = 0; i < 30000; i++){
 
         initialize_output(&h_output[784*i], output_N, output_N);
         initialize_dense_output(&h_dense_output[10*i]);

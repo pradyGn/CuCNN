@@ -281,7 +281,9 @@ int main(){
         //transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
 
         cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
-        transpose_cuda(d_weights, d_weights_T);
+        dim3 gridsize_tp(1);
+        dim3 blocksize_tp(output_M * output_M);
+        transpose_cuda<<<gridsize_tp, blocksize_tp>>>(d_weights, d_weights_T);
 
         //if (i == 0){
         //    cout<<"weights"<<endl;

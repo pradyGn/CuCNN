@@ -280,7 +280,7 @@ int main(){
             //cout<<"Hello from 1"<<endl;
         }
 
-        cout<<"weights"<<endl;
+        cout<<"Yoloooooooo weights"<<endl;
         check_matrix(h_weights, dense_output_M, (output_M * output_M));
 
         //cout<<"Transpose of weights"<<endl;

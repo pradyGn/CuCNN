@@ -296,7 +296,7 @@ int main(){
         //cudaMalloc((void**)&d_dense_grad_input_act, sizeof(float) * (output_M * output_M));
         //matrix_mul<<<gridsize_dense_grad_mm, blocksize_dense_grad_mm>>>(d_dense_grad_input, d_weights_T, d_dense_grad_input_act);
         d_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
-        matrix_mul(d_dense_grad_input, d_weights_T, d_dense_grad_input_act);
+        matrix_mul(h_dense_grad_input, h_weights_T, d_dense_grad_input_act);
 
         float *h_dense_grad_input_act;
         h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));

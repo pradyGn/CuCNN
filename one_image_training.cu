@@ -294,7 +294,7 @@ int main(){
 
         float *d_dense_grad_input_act;
         cudaMalloc((void**)&d_dense_grad_input_act, sizeof(float) * (output_M * output_M));
-        matrix_mul<<<gridsize_dense_grad_mm, blocksize_dense_grad_mm>>>(d_dense_grad_input, d_weights_T, d_dense_grad_input_act);
+        //matrix_mul<<<gridsize_dense_grad_mm, blocksize_dense_grad_mm>>>(d_dense_grad_input, d_weights_T, d_dense_grad_input_act);
 
         float *h_dense_grad_input_act;
         h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
@@ -305,7 +305,7 @@ int main(){
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            check_matrix(h_dense_grad_input_act,output_M,output_M);
+            //check_matrix(h_dense_grad_input_act,output_M,output_M);
             cout<<"Hello from 1"<<endl;
         }
 

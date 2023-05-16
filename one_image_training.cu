@@ -145,9 +145,27 @@ int main(){
         dim3 blocksize_dense_grad_input(dense_output_M);
 
         input_grad<<<gridsize_dense_grad_input, blocksize_dense_grad_input>>>(d_dense_grad_input, d_dense_output);
+
+
+        float *h_dense_grad_input
+        h_dense_grad_input = (float*)malloc(sizeof(float) * (dense_output_M));
+        cudaMemcpy(h_dense_grad_input, d_dense_grad_input, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
+        if (i == 0){
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
+            check_matrix(h_dense_grad_input,1,dense_output_M);
+            cout<<"Hello from 1"<<endl;
+        }
+
+
+
+
         float *h_weights_T, *d_weights_T;
         h_weights_T = (float*)malloc(sizeof(float) * dense_output_M * (output_M * output_M));
         cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+        
 
         transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
 

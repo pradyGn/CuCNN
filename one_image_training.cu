@@ -349,7 +349,7 @@ int main(){
         cudaMalloc((void**)&d_zeros_matrix, sizeof(float) * (filter_M * filter_M));
         cudaMemcpy(d_zeros_matrix, h_zeros_matrix, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
 
-        convolutional_layer2D <<<gridsize_fg, blocksize_fg>>>(d_dense_grad_input_act, d_train_image, d_filter_grad, d_zeros_matrix);
+        filter_grad_func <<<gridsize_fg, blocksize_fg>>>(d_dense_grad_input_act, d_train_image, d_filter_grad, d_zeros_matrix);
 
         h_filter_grad = (float*)malloc(sizeof(float) * (filter_M * filter_M));
         cudaMemcpy(h_filter_grad, d_filter_grad, sizeof(float) * (filter_M * filter_M), cudaMemcpyDeviceToHost);

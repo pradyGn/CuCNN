@@ -74,7 +74,8 @@ int main(){
     struct timeval t1, t2;
     gettimeofday(&t1, 0);
 
-    for (int i = 0; i < 60000; i++){
+    for (int z = 0, z < 10; z++){
+        for (int i = 0; i < 60000; i++){
 
         initialize_output(&h_output[784*i], output_N, output_N);
         initialize_dense_output(&h_dense_output[10*i]);
@@ -422,6 +423,7 @@ int main(){
         cudaFree(d_filter_grad);
 
 
+    }
     }
 
     //double time = t.toc();

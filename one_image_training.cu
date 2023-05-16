@@ -149,10 +149,16 @@ int main(){
         cudaMemcpy(d_min, h_min, sizeof(float), cudaMemcpyHostToDevice);
 
         calulate_min_max<<<1, dense_output_M>>>(d_dense_output, d_min, d_max);
+
+        cudaMemcpy(h_min, d_min, sizeof(float), cudaMemcpyDeviceToHost);
+        cudaMemcpy(h_max, d_max, sizeof(float), cudaMemcpyDeviceToHost);
+
         min_max_normalization<<<1, dense_output_M>>>(d_dense_output, d_min, d_max);
 
         cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
         if (i == 0){
+            cout << h_max[0] << endl;
+            cout << h_min[0] << endl;
             cout<<"Checking h_dense_output_conv before sigmoid"<<endl;
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);

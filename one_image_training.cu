@@ -122,11 +122,11 @@ int main(){
         
         dim3 gridsize_dense(1);
         dim3 blocksize_dense(dense_output_M);
-        //forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
-        cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
-        cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
-        check_matrix(h_weights, dense_output_M, output_M*output_M);
-        forward_propogation_check(&h_output[784*i], h_weights);
+        forward_propagation_fc<<<gridsize_dense, blocksize_dense>>>(d_output, d_weights, d_bias_dense, d_dense_output);
+        //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+        //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+        //check_matrix(h_weights, dense_output_M, output_M*output_M);
+        //forward_propogation_check(&h_output[784*i], h_weights);
         //cudaMemcpy(&h_output[784*i], d_output, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * 10, cudaMemcpyDeviceToHost);
 
@@ -135,7 +135,7 @@ int main(){
             cout<<"Checking h_dense_output_conv before sigmoid"<<endl;
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
-            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
             //check_matrix(h_dense_output,1,dense_output_M);
         }

@@ -147,7 +147,7 @@ int main(){
         input_grad<<<gridsize_dense_grad_input, blocksize_dense_grad_input>>>(d_dense_grad_input, d_dense_output);
 
 
-        float *h_dense_grad_input
+        float *h_dense_grad_input;
         h_dense_grad_input = (float*)malloc(sizeof(float) * (dense_output_M));
         cudaMemcpy(h_dense_grad_input, d_dense_grad_input, sizeof(float) * (dense_output_M), cudaMemcpyDeviceToHost);
         if (i == 0){

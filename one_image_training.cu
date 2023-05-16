@@ -60,12 +60,13 @@ int main(){
         initialize_dense_output(&h_dense_output[10*i]);
         
         int *d_train_label;
-        float *d_train_image, *h_delta_ll, *d_delta_ll;
+        float *d_train_image, *h_delta_ll, *d_delta_ll, *d_delta_curr;
         float *d_dense_output, *d_output;
 
         h_delta_ll = (float*)malloc(sizeof(float) * dense_output_M*1);
         initialize_dense_output(h_delta_ll);
 
+        cudaMalloc((void**)&d_delta_curr, sizeof(float) * dense_output_M*(output_M*output_M));
         cudaMalloc((void**)&d_delta_ll, sizeof(float) * dense_output_M*1);
         cudaMalloc((void**)&d_output, sizeof(float) * (output_N * output_N));
         cudaMalloc((void**)&d_train_image, sizeof(float) * 784);
@@ -122,15 +123,15 @@ int main(){
         // Backprop for previous layers
         dim3 gridsize_dense_bp(output_M*output_M);
         dim3 blocksize_dense_bp(dense_output_M * 1);
-        backward_propagation_fc<<<gridsize_dense_bp,blocksize_dense_bp>>>(d_output,d_delta_ll,d_weights);
-        cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+        backward_propagation_fc<<<gridsize_dense_bp,blocksize_dense_bp>>>(d_output,d_delta_ll,d_delta_curr,d_weights);
+        //cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
         
         if (i == 1){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            check_matrix(h_weights,dense_output_M,output_M*output_M);
+            //check_matrix(h_weights,dense_output_M,output_M*output_M);
         
         }
         
@@ -138,6 +139,7 @@ int main(){
         cudaFree(d_train_label);
         cudaFree(d_dense_output);
         cudaFree(d_delta_ll);
+        cudaFree(d_delta_curr);
         free(h_delta_ll);
         free(one_hot_label);
     }

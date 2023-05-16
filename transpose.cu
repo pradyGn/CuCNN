@@ -80,8 +80,9 @@ int main(){
 
     cudaFree(d_output);
     cudaFree(d_input);
-*/
     free(output);
+*/
+    
     free(input);
 
 

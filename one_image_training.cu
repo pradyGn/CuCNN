@@ -308,18 +308,18 @@ int main(){
 
 
 
-        //float *h_dense_grad_input_act;
-        //h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
-        //cudaMemcpy(h_dense_grad_input_act, d_dense_grad_input_act, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+        float *h_dense_grad_input_act;
+        h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
+        cudaMemcpy(h_dense_grad_input_act, d_dense_grad_input_act, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
 
-        //if (i == 0){
+        if (i == 0){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            //check_matrix(h_dense_grad_input_act, 1, output_M*output_M);
+            check_matrix(h_dense_grad_input_act, 1, output_M*output_M);
             //cout<<"Hello from 1"<<endl;
-        //}
+        }
 
 
 
@@ -357,7 +357,7 @@ int main(){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
-            //check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
+            check_matrix(&h_train_images[784*i],input_M,input_M);
             //cout<<"Hello from 2"<<endl;
             check_matrix(h_filter_grad,filter_M,filter_M);
             //cout<<"weights from 2 yolooooooooo"<<endl;

@@ -300,7 +300,7 @@ int main(){
         //check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
 
         //cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
-        c//udaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
+        //cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
 
 
 

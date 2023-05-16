@@ -132,6 +132,7 @@ int main(){
         weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
         cout<<3<<endl;
         cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+        cout<<4<<endl;
         if (i == 1){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);

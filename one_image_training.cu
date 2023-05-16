@@ -140,6 +140,8 @@ int main(){
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
             cout<<"Hello from 2"<<endl;
+            check_matrix(h_weights,dense_output_M,output_M*output_M);
+            cout<<"weights from 2"<<endl;
         }
         
         cudaFree(d_output);

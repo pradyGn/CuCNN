@@ -5,7 +5,7 @@
 using namespace std;
 
 // Function to read the MNIST dataset.
-void read_mnist_dataset(float* train_images, float* train_labels, float* test_images, float* test_labels) {
+void read_mnist_dataset(float* train_images, int* train_labels, float* test_images, int* test_labels) {
 
   // Open the MNIST files.
   FILE* train_images_file = fopen("./MNIST/MNIST_for_C/data/train-images.idx3-ubyte", "rb");
@@ -66,7 +66,7 @@ void read_mnist_dataset(float* train_images, float* train_labels, float* test_im
   fclose(test_labels_file);
 }
 
-void get_image_data(float* train_images, float* train_labels, float* test_images, float* test_labels){
+void get_image_data(float* train_images, int* train_labels, float* test_images, int* test_labels){
   //float* train_images = (float*)malloc(sizeof(float) * 60000 * 784);
   //float* train_labels = (float*)malloc(sizeof(float) * 60000);
   //float* test_images = (float*)malloc(sizeof(float) * 10000 * 784);

@@ -18,6 +18,12 @@ for (int i = 0; i < dense_output_M; i++) {
     }
 }
 
+void initialize_filter_grad(float* output){
+for (int i = 0; i < filter_M*filter_M; i++) {
+        output[i] = 0.0f;
+    }
+}
+
 __global__ void forward_propagation_fc(float* input, float* weights, float* bias, float* output) {
          int i = threadIdx.x;
          float sum = 0.0f;

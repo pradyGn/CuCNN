@@ -110,7 +110,7 @@ int main(){
         dim3 gridsize(output_M);
         dim3 blocksize(output_M);
         convolutional_layer2D <<<gridsize, blocksize>>>(d_filter, d_train_image, d_output, d_bias_conv);
-        cudaFree(d_train_image);
+        //cudaFree(d_train_image);
 
 
         dim3 gridsize_sig(1);
@@ -308,18 +308,18 @@ int main(){
 
 
 
-        float *h_dense_grad_input_act;
-        h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
-        cudaMemcpy(h_dense_grad_input_act, d_dense_grad_input_act, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
+        //float *h_dense_grad_input_act;
+        //h_dense_grad_input_act = (float*)malloc(sizeof(float) * (output_M * output_M));
+        //cudaMemcpy(h_dense_grad_input_act, d_dense_grad_input_act, sizeof(float) * (output_M * output_M), cudaMemcpyDeviceToHost);
 
-        if (i == 0){
+        //if (i == 0){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
             //check_matrix(&h_output[784*i], output_M, output_M);
             //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
-            check_matrix(h_dense_grad_input_act, 1, output_M*output_M);
-            cout<<"Hello from 1"<<endl;
-        }
+            //check_matrix(h_dense_grad_input_act, 1, output_M*output_M);
+            //cout<<"Hello from 1"<<endl;
+        //}
 
 
 
@@ -336,8 +336,41 @@ int main(){
             //check_matrix(h_weights,dense_output_M,output_M*output_M);
             //cout<<"weights from 2 yolooooooooo"<<endl;
         }
+
+
+        dim3 gridsize_fg(filter_M);
+        dim3 blocksize_fg(filter_M);
+
+        float *h_filter_grad, *d_filter_grad, *h_zeros_matrix, *d_zeros_matrix;
+        cudaMalloc((void**)&d_filter_grad, sizeof(float) * (filter_M * filter_M));
+
+        h_zeros_matrix = (float*)malloc(sizeof(float) * (filter_M * filter_M));
+        initialize_filter_grad(h_zeros_matrix);
+        cudaMalloc((void**)&d_zeros_matrix, sizeof(float) * (filter_M * filter_M));
+        cudaMemcpy(d_zeros_matrix, h_zeros_matrix, sizeof(float) * (filter_M * filter_M), cudaMemcpyHostToDevice);
+
+        convolutional_layer2D <<<gridsize_fg, blocksize_fg>>>(d_dense_grad_input_act, d_train_image, d_filter_grad, d_zeros_matrix);
+
+        h_filter_grad = (float*)malloc(sizeof(float) * (filter_M * filter_M));
+        cudaMemcpy(h_filter_grad, d_filter_grad, sizeof(float) * (filter_M * filter_M), cudaMemcpyDeviceToHost);
+        if (i == 0){
+            //check_matrix(&h_train_images[784*i], input_M, input_M);
+            //check_matrix(&h_output[784*i], output_M, output_M);
+            //check_matrix(&h_dense_output[10*i], 1, dense_output_M);
+            //check_matrix(h_delta_curr,dense_output_M,output_M*output_M);
+            //cout<<"Hello from 2"<<endl;
+            check_matrix(h_filter_grad,filter_M,filter_M);
+            //cout<<"weights from 2 yolooooooooo"<<endl;
+        }
+
+
+
+
+
+
         
         cudaFree(d_output);
+        cudaFree(d_train_image);
         cudaFree(d_train_label);
         cudaFree(d_dense_output);
         cudaFree(d_delta_ll);

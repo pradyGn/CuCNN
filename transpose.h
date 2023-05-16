@@ -11,3 +11,12 @@ void transpose(float *input, float* output, int M, int N){
         }
     }
 }
+
+__global__ void transpose_cuda(float *input, float* output){
+    int i = threadIdx.x;
+
+    for (int j = 0; j < dense_output_M; j++){
+        output[i * dense_output_M + j] = input[j * (output_M * output_M) + i];
+    }
+    
+}

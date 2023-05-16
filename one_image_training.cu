@@ -17,6 +17,8 @@ using namespace std;
 
 int main(){
 
+
+
     float* h_train_images = (float*)malloc(sizeof(float) * 60000 * 784);
     int* h_train_labels = (int*)malloc(sizeof(int) * 60000);
     float* h_test_images = (float*)malloc(sizeof(float) * 10000 * 784);
@@ -271,12 +273,15 @@ int main(){
 
 
 
-        float *h_weights_T, *d_weights_T;
-        h_weights_T = (float*)malloc(sizeof(float) * dense_output_M * (output_M * output_M));
-        cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
+        float *d_weights_T;//, *h_weights_T;
+        //h_weights_T = (float*)malloc(sizeof(float) * dense_output_M * (output_M * output_M));
+        //cudaMemcpy(h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         
 
-        transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
+        //transpose(h_weights, h_weights_T, (output_M * output_M), dense_output_M);
+
+        cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
+        transpose_cuda(d_weights, d_weights_T);
 
         //if (i == 0){
         //    cout<<"weights"<<endl;
@@ -294,8 +299,8 @@ int main(){
         //cout<<"Transpose of weights"<<endl;
         //check_matrix(h_weights_T, (output_M * output_M), dense_output_M);
 
-        cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
-        cudaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
+        //cudaMalloc((void**)&d_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)));
+        c//udaMemcpy(d_weights_T, h_weights_T, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyHostToDevice);
 
 
 

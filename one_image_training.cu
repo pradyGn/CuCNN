@@ -126,10 +126,11 @@ int main(){
         backward_propagation_fc<<<gridsize_dense_bp,blocksize_dense_bp>>>(d_output,d_delta_ll,d_delta_curr,d_weights);
         //cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         //cudaMemcpy(&h_dense_output[10*i], d_dense_output, sizeof(float) * (dense_output_M * 1), cudaMemcpyDeviceToHost);
-        
+        cout<<2<<endl;        
         dim3 gridsize_wts_update(1);
         dim3 blocksize_wts_update(dense_output_M * (output_M * output_M));
         weight_update<<<gridsize_wts_update,blocksize_wts_update>>>(d_delta_curr,d_weights);
+        cout<<3<<endl;
         cudaMemcpy(&h_weights, d_weights, sizeof(float) * (dense_output_M * (output_M * output_M)), cudaMemcpyDeviceToHost);
         if (i == 1){
             //check_matrix(&h_train_images[784*i], input_M, input_M);
